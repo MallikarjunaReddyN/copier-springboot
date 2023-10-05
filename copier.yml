@@ -1,0 +1,57 @@
+_min_copier_version: "8.0.0"
+
+_subdirectory: "template"
+
+_envops:
+  keep_trailing_newline: true
+
+_exclude:
+    - slugify
+
+project_name:
+    type: str
+    help: Enter Your project name
+    placeholder: My Project
+
+project_name_combined:
+    type: str
+    help: Combined project name
+    default: "{% from 'slugify.jinja' import project_name_combined %}{{ project_name_combined(project_name) }}"
+
+project_slug:
+    type: str
+    help: A slug of the project name
+    default: "{% from 'slugify.jinja' import slugify %}{{ slugify(project_name) }}"
+
+project_package:
+    type: str
+    help: Package name
+    default: "{% from 'slugify.jinja' import project_package %}{{ project_package(project_name) }}"
+
+server_port:
+    type: str
+    help: Server port
+    default: "{{ range(1000, 5000) | random }}"
+
+version:
+    type: str
+    help: Enter your version
+    default: '0.0.1'
+
+project_description:
+    type: str
+    help: Enter Your project description
+    default: This is a Spring Boot Microservice
+
+is_db_required:
+    type: bool
+    help: Is Database required for your microservice
+    default: true
+
+entity:
+    type: str
+    help: Enter Your entity name
+    default: "MyEntity"
+   
+
+

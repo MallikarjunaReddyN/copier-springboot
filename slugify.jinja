@@ -1,0 +1,12 @@
+{# For simplicity ... -#}
+{% macro slugify(value) -%}
+{{ value|lower|replace(' ', '-') }}
+{%- endmacro %}
+
+{% macro project_name_combined(value) -%}
+{{ value|title|replace(' ', '') }}
+{%- endmacro %}
+
+{% macro project_package(value) -%}
+{{ value|lower|replace(' ', '') }}
+{%- endmacro %}

@@ -1,0 +1,15 @@
+package com.malli.{{ project_package }}.domain;
+
+
+import javax.persistence.*;
+
+
+@Entity
+@Table(name = "{{ entity }}")
+public class {{ entity }} {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
+	private String name;
+}

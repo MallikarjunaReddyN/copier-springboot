@@ -1,0 +1,12 @@
+package com.malli.{{ project_package }}.service;
+{% if is_db_required %}
+import com.malli.{{ project_package }}.repository.{{ entity }}Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+{% endif %}
+import org.springframework.stereotype.Service;
+
+@Service
+public class {{ entity }}Service {	
+	{% if is_db_required %} @Autowired
+   	private {{ entity }}Repository {{ entity.lower() }}Repository;{% endif %}	
+}

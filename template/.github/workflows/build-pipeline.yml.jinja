@@ -66,7 +66,7 @@ jobs:
         distribution: 'corretto'
         cache: maven
     - name: Publish artifact on GitHub Packages
-      if: ${{github.ref == 'refs/heads/release'}}
+      if: "{% raw %}${{github.ref == 'refs/heads/release'}}{% endraw %}"
       run: mvn -B clean deploy -DskipTests
       env:
         GITHUB_TOKEN: "{% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}"

@@ -38,18 +38,18 @@ jobs:
       - name: SonarCloud Scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          GITHUB_TOKEN: "{% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}"
+          SONAR_TOKEN: "{% raw %}${{ secrets.SONAR_TOKEN }}{% endraw %}"
+          SONAR_HOST_URL: "{% raw %}${{ secrets.SONAR_HOST_URL }}{% endraw %}"
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
         uses: sonarsource/sonarqube-quality-gate-action@master
           # Force to fail step after specific time.
         timeout-minutes: 5
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: "{% raw %}${{ secrets.SONAR_TOKEN }}{% endraw %}"
       - name: "SonarQube Quality Gate Status"
-        run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"
+        run: echo "The Quality Gate status is "{% raw %}${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}{% endraw %}""
           
   build:
     name: Build, Publish & Docker push
@@ -69,9 +69,9 @@ jobs:
       if: ${{github.ref == 'refs/heads/release'}}
       run: mvn -B clean deploy -DskipTests
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: "{% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}"
     - name: Docker build & push
-      run: mvn clean compile jib:build -Djib.to.auth.username=${{ secrets.DOCKER_USERNAME }} -Djib.to.auth.password=${{ secrets.DOCKER_PASSWORD }} -Djib.to.tags=${{ github.run_number }}
+      run: mvn clean compile jib:build -Djib.to.auth.username="{% raw %}${{ secrets.DOCKER_USERNAME }}{% endraw %}" -Djib.to.auth.password="{% raw %}${{ secrets.DOCKER_PASSWORD }}{% endraw %}" -Djib.to.tags="{% raw %}${{ github.run_number }}{% endraw %}"
 
   update-manifest:
     name: Update Image tag in manifest file
@@ -82,14 +82,14 @@ jobs:
         with:
           repository: MallikarjunaReddyN/k8s-manifests
           ref: main
-          token: ${{ secrets.WROKFLOW_TOKEN }}
+          token: "{% raw %}${{ secrets.WROKFLOW_TOKEN }}{% endraw %}"
       - name: setup git config
         run: |
           git config --global user.email "ciagent@gmail.com"
           git config --global user.name "CI Agent"
-          echo ${{github.run_number}}
-          sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:${{ github.run_number }}#g' services/{{ project_slug }}/demo-deployment.yaml
+          echo "{% raw %}${{github.run_number}}{% endraw %}"
+          sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:"{% raw %}${{ github.run_number }}{% endraw %}"#g' services/{{ project_slug }}/demo-deployment.yaml
           git add .
-          git commit -am "Update image for - ${{ github.run_number }}"
+          git commit -am "Update image for - "{% raw %}${{ github.run_number }}{% endraw %}""
       - run: git push origin main
 

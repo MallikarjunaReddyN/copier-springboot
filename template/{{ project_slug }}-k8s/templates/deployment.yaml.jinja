@@ -3,18 +3,18 @@ kind: Deployment
 metadata:
   name: {{ project_slug }}
   labels:
-    app: {{ project_combined }}
+    app: {{ project_package }}
 spec:
   selector:
     matchLabels:
-      app: {{ project_combined }}
+      app: {{ project_package }}
   template:
     metadata:
       labels:
-        app: {{ project_combined }}
+        app: {{ project_package }}
     spec:
       containers:
-        - name: {{ project_combined }}
+        - name: {{ project_package }}
           image: {% raw %}{{ .Values.image }}{% endraw %}
           livenessProbe:
             httpGet:

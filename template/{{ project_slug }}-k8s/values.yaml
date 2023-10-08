@@ -1,0 +1,18 @@
+replicaCount: 1
+
+image:
+  repository: mallireddy1998/{{ project_slug }}
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: {{ server_port }}
+
+
+resources: 
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi

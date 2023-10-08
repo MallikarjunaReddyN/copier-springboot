@@ -66,7 +66,7 @@ jobs:
         distribution: 'corretto'
         cache: maven
     - name: Publish artifact on GitHub Packages
-      if: "{% raw %}${{github.ref == 'refs/heads/release'}}{% endraw %}"
+      if: contains(GITHUB_REF_NAME, 'release')
       run: mvn -B clean deploy -DskipTests
       env:
         GITHUB_TOKEN: "{% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}"
@@ -87,9 +87,20 @@ jobs:
         run: |
           git config --global user.email "ciagent@gmail.com"
           git config --global user.name "CI Agent"
-          echo "{% raw %}${{github.run_number}}{% endraw %}"
-          sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:"{% raw %}${{ github.run_number }}{% endraw %}"#g' services/{{ project_slug }}/demo-deployment.yaml
-          git add .
-          git commit -am "Update image for - "{% raw %}${{ github.run_number }}{% endraw %}""
-      - run: git push origin main
+          # sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:"{% raw %}${{ github.run_number }}{% endraw %}"#g' services/{{ project_slug }}/values-dev.yaml
+      - name: replace tag and save file for dev
+        if: "{% raw %}${{github.ref == 'refs/heads/dev'}}{% endraw %}"
+        run: sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:"{% raw %}${{ github.run_number }}{% endraw %}"#g' services/{{ project_slug }}/values-dev.yaml
+      - name: replace tag and save file for qa
+        if: "{% raw %}${{github.ref == 'refs/heads/main'}}{% endraw %}"
+        run: sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:"{% raw %}${{ github.run_number }}{% endraw %}"#g' services/{{ project_slug }}/values-qa.yaml
+      - name: replace tag and save file for prod
+        if: contains(GITHUB_REF_NAME, 'release')
+        run: sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:"{% raw %}${{ github.run_number }}{% endraw %}"#g' services/{{ project_slug }}/values-prod.yaml
+      - name: stage & commit changes
+        run: |
+        git add .
+        git commit -am "Update image for - "{% raw %}${{ github.run_number }}{% endraw %}""
+      - name: push changes
+        run: git push origin main
 

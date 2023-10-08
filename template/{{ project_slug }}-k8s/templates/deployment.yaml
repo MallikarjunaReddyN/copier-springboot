@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ project_slug }}
+  labels:
+    app: {{ project_combined }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ project_combined }}
+  template:
+    metadata:
+      labels:
+        app: {{ project_combined }}
+    spec:
+      containers:
+        - name: {{ project_combined }}
+          image: {% raw %}{{ .Values.image }}{% endraw %}
+          livenessProbe:
+            httpGet:
+              port: {% raw %}{{ .Values.service.port }}{% endraw %}
+              path: /actuator/health/liveness
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              port: {% raw %}{{ .Values.service.port }}{% endraw %}
+              path: /actuator/health/readiness
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          resources:
+            {% raw %}{{- toYaml .Values.resources | nindent 12 }}{% endraw %}
+          ports:
+            - containerPort: {% raw %}{{ .Values.service.port }}{% endraw %}

@@ -99,8 +99,8 @@ jobs:
         run: sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:"{% raw %}${{ github.run_number }}{% endraw %}"#g' services/{{ project_slug }}/values-prod.yaml
       - name: stage & commit changes
         run: |
-        git add .
-        git commit -am "Update image for - "{% raw %}${{ github.run_number }}{% endraw %}""
+          git add .
+          git commit -am "Update image for - "{% raw %}${{ github.run_number }}{% endraw %}""
       - name: push changes
         run: git push origin main
 

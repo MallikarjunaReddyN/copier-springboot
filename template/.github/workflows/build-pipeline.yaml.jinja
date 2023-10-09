@@ -83,7 +83,7 @@ jobs:
         with:
           repository: MallikarjunaReddyN/k8s-manifests
           ref: main
-          token: {% raw %}${{ secrets.WROKFLOW_TOKEN }}{% endraw %}
+          token: {% raw %}${{ secrets.WORKFLOW_TOKEN }}{% endraw %}
       - name: setup git config
         run: |
           git config --global user.email "ciagent@gmail.com"

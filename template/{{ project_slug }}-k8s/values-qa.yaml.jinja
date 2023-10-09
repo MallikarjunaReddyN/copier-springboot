@@ -2,12 +2,6 @@ replicaCount: 2
 
 image:
   repository: mallireddy1998/{{ project_slug }}
-  pullPolicy: IfNotPresent
-
-service:
-  type: ClusterIP
-  port: {{ server_port }}
-
 
 resources: 
   limits:

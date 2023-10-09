@@ -11,3 +11,7 @@
 {% macro project_package(value) -%}
 {{ value|lower|replace(' ', '') }}
 {%- endmacro %}
+
+{% macro get_entity_name(value) -%}
+{{ value.split(' ')[0] }}
+{%- endmacro %}

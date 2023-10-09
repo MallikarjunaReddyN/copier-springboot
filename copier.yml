@@ -57,7 +57,7 @@ is_db_required:
 entity:
     type: str
     help: Enter Your entity name
-    default: "MyEntity"
+    default: "{% from 'slugify.jinja' import get_entity_name %}{{ get_entity_name(project_name) }}"
 
 docker_registery:
     type: "str"

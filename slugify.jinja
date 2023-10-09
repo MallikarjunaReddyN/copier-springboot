@@ -1,4 +1,9 @@
 {# For simplicity ... -#}
+
+{% macro format_group_id_for_folder(value) -%}
+{{ value|lower|replace('.', '/') }}
+{%- endmacro %}
+
 {% macro slugify(value) -%}
 {{ value|lower|replace(' ', '-') }}
 {%- endmacro %}

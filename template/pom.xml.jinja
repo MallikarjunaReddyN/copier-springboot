@@ -8,14 +8,14 @@
 		<version>3.1.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.malli</groupId>
+	<groupId>com.{{ project_sub_groupid }}</groupId>
 	<artifactId>{{ project_slug }}</artifactId>
 	<version>{{ version }}</version>
 	<name>{{ project_name }}</name>
 	<description>{{ project_description }}</description>
 	<properties>
 		<java.version>17</java.version>
-		<docker.image.prefix>registry.hub.docker.com</docker.image.prefix>
+		<docker.image.prefix>{{ docker_registery }}</docker.image.prefix>
         <container.image>openjdk:17-alpine</container.image>
 		<springdoc-openapi-ui>1.7.0</springdoc-openapi-ui>
 		<jib-maven-plugin.version>3.3.0</jib-maven-plugin.version>

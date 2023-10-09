@@ -3,10 +3,15 @@ _min_copier_version: "8.0.0"
 _subdirectory: "template"
 
 _envops:
-  keep_trailing_newline: true
+    keep_trailing_newline: true
 
 _exclude:
     - slugify
+
+project_sub_groupid:
+    type: str
+    help: Enter Your project name
+    placeholder: springframework, malli
 
 project_name:
     type: str
@@ -36,7 +41,7 @@ server_port:
 version:
     type: str
     help: Enter your version
-    default: '0.0.1'
+    default: "0.0.1"
 
 project_description:
     type: str
@@ -52,6 +57,8 @@ entity:
     type: str
     help: Enter Your entity name
     default: "MyEntity"
-   
 
-
+docker_registery:
+    type: "str"
+    help: "The docker Registery to store docker images"
+    default: "registry.hub.docker.com"

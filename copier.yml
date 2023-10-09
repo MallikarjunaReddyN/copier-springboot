@@ -8,10 +8,11 @@ _envops:
 _exclude:
     - slugify
 
-project_sub_groupid:
+group_id:
     type: str
     help: Enter Your project name
-    placeholder: springframework, malli
+    placeholder: org.springframework.boot
+
 
 project_name:
     type: str

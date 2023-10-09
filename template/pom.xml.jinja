@@ -17,7 +17,7 @@
 		<java.version>17</java.version>
 		<docker.image.prefix>{{ docker_registery }}</docker.image.prefix>
         <container.image>openjdk:17-alpine</container.image>
-		<springdoc-openapi-ui>2.0.2</springdoc-openapi-ui>
+		<springdoc-openapi-ui>2.0.4</springdoc-openapi-ui>
 		<jib-maven-plugin.version>3.3.0</jib-maven-plugin.version>
 		<!--Sonarcloud properties for maven command-->
 		<!--<sonar.organization>mallikarjunareddyn</sonar.organization>
@@ -107,7 +107,7 @@
 			<plugin>
             	<groupId>org.apache.maven.plugins</groupId>
             	<artifactId>maven-checkstyle-plugin</artifactId>
-            	<version>3.0.0</version>
+            	<version>3.3.0</version>
             	<configuration>
                 	<configLocation>${basedir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
             	</configuration>

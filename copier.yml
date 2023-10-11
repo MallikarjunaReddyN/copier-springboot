@@ -12,54 +12,74 @@ group_id:
     type: str
     help: Enter Your project name
     placeholder: org.springframework.boot
-
+    validator: "{% if not group_id %}Please enter group id for your project{% endif %}"
 
 project_name:
     type: str
     help: Enter Your project name
     placeholder: My Project
+    validator: "{% if not project_name %}Please enter project name for your project{% endif %}"
 
 project_name_combined:
     type: str
     help: Combined project name
     default: "{% from 'slugify.jinja' import project_name_combined %}{{ project_name_combined(project_name) }}"
+    validator: "{% if not project_name_combined %}Please enter group id for your project{% endif %}"
 
 project_slug:
     type: str
     help: A slug of the project name
     default: "{% from 'slugify.jinja' import slugify %}{{ slugify(project_name) }}"
+    validator: "{% if not project_slug %}Please enter group id for your project{% endif %}"
 
 project_package:
     type: str
     help: Package name
     default: "{% from 'slugify.jinja' import project_package %}{{ project_package(project_name) }}"
+    validator: "{% if not project_package %}Please enter package for your project{% endif %}"
 
 server_port:
     type: str
     help: Server port
     default: "{{ range(1000, 5000) | random }}"
+    validator: "{% if not server_port %}Please enter port number for your project{% endif %}"
 
 version:
     type: str
     help: Enter your version
     default: "0.0.1"
+    validator: "{% if not version %}Please enter version for your project{% endif %}"
 
 project_description:
     type: str
     help: Enter Your project description
     default: This is a Spring Boot Microservice
+    validator: "{% if not project_description %}Please enter project description for your project{% endif %}"
 
 is_db_required:
     type: bool
     help: Is Database required for your microservice
     default: true
+    validator: "{% if is_db_required == '' %}Invalid input{% endif %}"
 
 entity:
     type: str
     help: Enter Your entity name
     default: "{% from 'slugify.jinja' import get_entity_name %}{{ get_entity_name(project_name) }}"
+    validator: "{% if not entity %}Please enter Entity name for your project{% endif %}"
 
-docker_registery:
+container_registery:
     type: "str"
     help: "The docker Registery to store docker images"
     default: "registry.hub.docker.com"
+    validator: "{% if not container_registery %}Please enter container registery for storing you docker images{% endif %}"
+
+
+_message_before_copy: |
+    Thanks for generating a project using our template.
+
+    You'll be asked a series of questions whose answers will be used to
+    generate a tailored project for you.
+
+_message_after_copy: |
+    Your project "{{ project_name }}" has been created successfully!

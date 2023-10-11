@@ -5,6 +5,9 @@ metadata:
   labels:
     app: {{ project_package }}
 spec:
+  replicas: {% raw %}{{ .Values.replicaCount }}{% endraw %}
+  strategy:
+     type: RollingUpdate
   selector:
     matchLabels:
       app: {{ project_package }}

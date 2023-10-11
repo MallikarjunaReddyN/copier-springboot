@@ -3,10 +3,14 @@ replicaCount: 3
 image:
   repository: mallireddy1998/{{ project_slug }}
 
+service:
+  type: ClusterIP
+  port: {{ server_port }}
+
 resources: 
   limits:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 500m
+    memory: 512Mi
   requests:
     cpu: 100m
     memory: 128Mi

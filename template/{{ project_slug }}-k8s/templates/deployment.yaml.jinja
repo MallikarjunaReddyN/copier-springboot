@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: {{ project_package }}
-          image: {% raw %}{{ .Values.image }}{% endraw %}
+          image: {% raw %}{{ .Values.image.repository }}{% endraw %}
+          pullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
               port: {% raw %}{{ .Values.service.port }}{% endraw %}

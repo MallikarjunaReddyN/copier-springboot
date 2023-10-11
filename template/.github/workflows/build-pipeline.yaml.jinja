@@ -89,7 +89,7 @@ jobs:
           git config --global user.email "ciagent@gmail.com"
           git config --global user.name "CI Agent"
       - name: replace tag and save file for feature branches
-        if: {% raw %}${{github.ref != 'refs/heads/dev'}}{% endraw %} && {% raw %}${{github.ref != 'refs/heads/main'}}{% endraw %} && !contains(github.ref, 'release')
+        if: {% raw %}${{github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/main' && !contains(github.ref, 'release')}}{% endraw %}
         run: sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:{% raw %}${{ github.run_number }}{% endraw %}#g' services/{{ project_slug }}/values.yaml
       - name: replace tag and save file for dev
         if: {% raw %}${{github.ref == 'refs/heads/dev'}}{% endraw %}

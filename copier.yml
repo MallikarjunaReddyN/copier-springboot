@@ -10,7 +10,7 @@ _exclude:
 
 group_id:
     type: str
-    help: Enter Your project name
+    help: Enter Your group id
     placeholder: org.springframework.boot
     validator: "{% if not group_id %}Please enter group id for your project{% endif %}"
 

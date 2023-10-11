@@ -29,7 +29,7 @@ spec:
               path: /actuator/health/readiness
             initialDelaySeconds: 60
             periodSeconds: 10
-          resources:
-            {% raw %}{{- toYaml .Values.resources | nindent 12 }}{% endraw %}
+          #resources:
+          #  {% raw %}{{- toYaml .Values.resources | nindent 12 }}{% endraw %}
           ports:
             - containerPort: {% raw %}{{ .Values.service.port }}{% endraw %}

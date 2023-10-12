@@ -71,9 +71,11 @@ jobs:
       run: mvn -B clean deploy -DskipTests
       env:
         GITHUB_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
+{% if docker %}
     - name: Docker build & push
       run: mvn clean compile jib:build -Djib.to.auth.username={% raw %}${{ secrets.DOCKER_USERNAME }}{% endraw %} -Djib.to.auth.password={% raw %}${{ secrets.DOCKER_PASSWORD }}{% endraw %} -Djib.to.tags={% raw %}${{ github.run_number }}{% endraw %}
-
+{% endif %}
+{% if docker and argocd -%} 
   update-manifest:
     name: Update Image tag in manifest file
     runs-on: ubuntu-latest
@@ -106,4 +108,4 @@ jobs:
           git commit -am "Update image for - "{% raw %}${{ github.run_number }}{% endraw %}""
       - name: push changes
         run: git push origin main
-
+{%- endif %}

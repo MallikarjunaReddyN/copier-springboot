@@ -58,9 +58,24 @@ project_description:
 
 is_db_required:
     type: bool
-    help: Is Database required for your microservice
-    default: true
+    help: Is Database required for your project
+    default: false
     validator: "{% if is_db_required == '' %}Invalid input{% endif %}"
+
+db: 
+    type: str
+    help: Which cloud DB do you use?
+    when: is_db_required
+    choices:
+        - MySQL
+        - PostgreSQL
+
+db_name:
+    type: str
+    help: Enter DB name for you project
+    default: '{{ project_slug }}'
+    validator: "{% if not db_name %}Please enter DB name for your project{% endif %}"
+    when: is_db_required
 
 entity:
     type: str
@@ -68,12 +83,17 @@ entity:
     default: "{% from 'slugify.jinja' import get_entity_name %}{{ get_entity_name(project_name) }}"
     validator: "{% if not entity %}Please enter Entity name for your project{% endif %}"
 
+docker:
+  type: bool
+  default: false
+  validator: "{% if docker == '' %}Invalid input{% endif %}"
+
 container_registery:
     type: "str"
     help: "The docker Registery to store docker images"
     default: "registry.hub.docker.com"
     validator: "{% if not container_registery %}Please enter container registery for storing you docker images{% endif %}"
-
+    when: docker
 
 _message_before_copy: |
     Thanks for generating a project using our template.

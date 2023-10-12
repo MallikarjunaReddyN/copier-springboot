@@ -60,8 +60,8 @@ is_db_required:
     type: str
     help: Is Database required for your project
     choices: 
-        - Yes
-        - No
+        - 'Yes'
+        - 'No'
     validator: "{% if not is_db_required %}Invalid input{% endif %}"
 
 db: 
@@ -89,8 +89,8 @@ docker:
   type: str
   help: Which cloud DB do you use?
   choices: 
-        - Yes
-        - No
+        - 'Yes'
+        - 'No'
 
 container_registery:
     type: "str"

@@ -3,7 +3,7 @@ _min_copier_version: "8.0.0"
 _subdirectory: "template"
 
 _envops:
-    keep_trailing_newline: false
+    keep_trailing_newline: true
 
 _exclude:
     - slugify
@@ -66,7 +66,7 @@ is_db_required:
 
 db: 
     type: str
-    help: Which cloud DB do you use?
+    help: Which DB do you use?
     when: "{{ is_db_required == 'Yes' }}"
     choices:
         - MySQL
@@ -87,7 +87,7 @@ entity:
 
 docker:
   type: str
-  help: Which cloud DB do you use?
+  help: Do you want docker?
   choices: 
         - 'Yes'
         - 'No'
@@ -98,6 +98,13 @@ container_registery:
     default: "registry.hub.docker.com"
     validator: "{% if not container_registery %}Please enter container registery for storing you docker images{% endif %}"
     when: "{{ docker == 'Yes' }}"
+
+argocd:
+    type: str
+    help: Do you want argoCD for your project?
+    choices: 
+        - 'Yes'
+        - 'No'
 
 _message_before_copy: |
     Thanks for generating a project using our template.

@@ -57,15 +57,17 @@ project_description:
     validator: "{% if not project_description %}Please enter project description for your project{% endif %}"
 
 is_db_required:
-    type: bool
+    type: str
     help: Is Database required for your project
-    default: false
-    validator: "{% if is_db_required == '' %}Invalid input{% endif %}"
+    choices: 
+        - Yes
+        - No
+    validator: "{% if not is_db_required %}Invalid input{% endif %}"
 
 db: 
     type: str
     help: Which cloud DB do you use?
-    when: is_db_required
+    when: "{{ is_db_required == 'Yes' }}"
     choices:
         - MySQL
         - PostgreSQL
@@ -75,7 +77,7 @@ db_name:
     help: Enter DB name for you project
     default: '{{ project_slug }}'
     validator: "{% if not db_name %}Please enter DB name for your project{% endif %}"
-    when: is_db_required
+    when: "{{ is_db_required == 'Yes' }}"
 
 entity:
     type: str
@@ -84,16 +86,18 @@ entity:
     validator: "{% if not entity %}Please enter Entity name for your project{% endif %}"
 
 docker:
-  type: bool
-  default: false
-  validator: "{% if docker == '' %}Invalid input{% endif %}"
+  type: str
+  help: Which cloud DB do you use?
+  choices: 
+        - Yes
+        - No
 
 container_registery:
     type: "str"
     help: "The docker Registery to store docker images"
     default: "registry.hub.docker.com"
     validator: "{% if not container_registery %}Please enter container registery for storing you docker images{% endif %}"
-    when: docker
+    when: "{{ docker == 'Yes' }}"
 
 _message_before_copy: |
     Thanks for generating a project using our template.

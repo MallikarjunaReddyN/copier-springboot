@@ -1,0 +1,22 @@
+services:
+  {% if db == 'MySQL' %}
+  mysql:
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_DATABASE={{ db_name }}'
+      - 'MYSQL_PASSWORD=user@123'
+      - 'MYSQL_ROOT_PASSWORD=root@123'
+      - 'MYSQL_USER=myuser'
+    ports:
+      - "3306:3306"
+  {% endif %}  
+  {% if db == 'PostgreSQL' %}  
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB={{ db_name }}'
+      - 'POSTGRES_PASSWORD=postgres@123'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - "5432:5432"
+  {% endif %}  

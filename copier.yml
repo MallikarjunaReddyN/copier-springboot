@@ -101,7 +101,7 @@ container_registery:
 
 CI:
     type: str
-    help: Do you want docker?
+    help: Do you want Continuous Integration for your project?
     choices: 
         - 'Yes'
         - 'No'

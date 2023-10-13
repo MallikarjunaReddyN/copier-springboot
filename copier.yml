@@ -58,15 +58,14 @@ project_description:
 
 is_db_required:
     type: str
-    help: Is Database required for your project
+    help: Do you want database for your project?
     choices: 
         - 'Yes'
         - 'No'
-    validator: "{% if not is_db_required %}Invalid input{% endif %}"
 
 db: 
     type: str
-    help: Which DB do you use?
+    help: Which database do you want?
     when: "{{ is_db_required == 'Yes' }}"
     choices:
         - MySQL
@@ -74,7 +73,7 @@ db:
 
 db_name:
     type: str
-    help: Enter DB name for you project
+    help: Enter database name for you project
     default: '{{ project_slug }}'
     validator: "{% if not db_name %}Please enter DB name for your project{% endif %}"
     when: "{{ is_db_required == 'Yes' }}"
@@ -87,7 +86,7 @@ entity:
 
 docker:
     type: str
-    help: Do you want docker?
+    help: Do you want dockerize you project?
     choices: 
         - 'Yes'
         - 'No'

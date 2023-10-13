@@ -4,9 +4,9 @@ services:
     image: 'mysql:latest'
     environment:
       - 'MYSQL_DATABASE={{ db_name }}'
-      - 'MYSQL_PASSWORD=user@123'
+      - 'MYSQL_PASSWORD=mysql@123'
       - 'MYSQL_ROOT_PASSWORD=root@123'
-      - 'MYSQL_USER=myuser'
+      - 'MYSQL_USER=mysql'
     ports:
       - "3306:3306"
   {% endif %}  

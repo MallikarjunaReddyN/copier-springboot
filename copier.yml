@@ -17,7 +17,7 @@ group_id:
 project_name:
     type: str
     help: Enter Your project name
-    placeholder: My Project
+    placeholder: Example Service
     validator: "{% if not project_name %}Please enter project name for your project{% endif %}"
 
 project_name_combined:
@@ -138,6 +138,6 @@ _message_after_copy: |
 
     2. Run "chmod 777 ./mvnw"
 
-    3. Run "./mvnw clean package"
+    3. Run "./mvnw spring-boot:run"
 
-    4. http://localhost:{{ server_port }}/{{ project_slug }}/v1/swagger-ui
+    4. Visit http://localhost:{{ server_port }}/{{ project_slug }}/v1/swagger-ui

@@ -1,6 +1,6 @@
-package com.malli.{{ project_package }}.service;
+package {{ group_id }}.{{ project_package }}.service;
 {% if is_db_required %}
-import com.malli.{{ project_package }}.repository.{{ entity }}Repository;
+import {{ group_id }}.{{ project_package }}.repository.{{ entity }}Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 {% endif %}
 import org.springframework.stereotype.Service;

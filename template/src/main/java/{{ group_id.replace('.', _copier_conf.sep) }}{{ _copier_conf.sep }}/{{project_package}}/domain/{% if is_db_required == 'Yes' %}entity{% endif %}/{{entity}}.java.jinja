@@ -1,15 +1,18 @@
 package com.malli.{{ project_package }}.domain.entity;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-
+@Getter
+@Setter
+@Builder
 @Entity
 @Table(name = "{{ entity|lower }}")
-public class {{ entity }} {
+public class {{ entity }} extends BaseEntity {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
 	private String name;
 }

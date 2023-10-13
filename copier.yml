@@ -86,9 +86,9 @@ entity:
     validator: "{% if not entity %}Please enter Entity name for your project{% endif %}"
 
 docker:
-  type: str
-  help: Do you want docker?
-  choices: 
+    type: str
+    help: Do you want docker?
+    choices: 
         - 'Yes'
         - 'No'
 
@@ -99,9 +99,24 @@ container_registery:
     validator: "{% if not container_registery %}Please enter container registery for storing you docker images{% endif %}"
     when: "{{ docker == 'Yes' }}"
 
+CI:
+    type: str
+    help: Do you want docker?
+    choices: 
+        - 'Yes'
+        - 'No'
+
+CI_type:
+    type: str
+    help: What Continuous Integration service do you want to use?
+    choices:
+        - 'Github Actions'
+        - 'Azure Pipelines'
+
 argocd:
     type: str
     help: Do you want argoCD for your project?
+    when: "{{ docker == 'Yes' and CI_type == 'Github Actions'}}"
     choices: 
         - 'Yes'
         - 'No'

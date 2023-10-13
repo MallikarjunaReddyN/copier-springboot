@@ -1,0 +1,57 @@
+trigger:
+- '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+  demands: 
+  - maven
+
+steps:
+  - task: JavaToolInstaller@0
+    displayName: 'Installing Java 17'
+    inputs:
+      versionSpec: '17'
+      jdkArchitectureOption: 'x86'
+      jdkSourceOption: 'PreInstalled'
+
+  - task: Maven@4
+    displayName: Test and Publish Test Results
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'clean package'
+      publishJUnitResults: true
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      testRunTitle: 'Unit Tests'
+      codeCoverageToolOption: 'JaCoCo'
+      classFilter: -:{{group_id}}.{{package_name}}.model.*,-:{{group_id}}.{{package_name}}.config.*,-:{{group_id}}.{{package_name}}.repository.*
+      javaHomeOption: 'JDKVersion'
+      mavenVersionOption: 'Default'
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+      sonarQubeRunAnalysis: true
+      sqMavenPluginVersionChoice: 'latest'
+
+  - task: SonarQubePrepare@5
+    displayName: Sonar Scan
+    inputs:
+      SonarQube: 'sonarcloud' # 'sonarcloud' is service connection name
+      scannerMode: 'CLI'
+      configMode: 'file'
+        
+  - task: SonarQubePublish@5
+    displayName: Sonar Pulish
+    inputs:
+      pollingTimeoutSec: '300'
+
+  - task: Maven@4
+    displayName: Docker Build & Push
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'clean package -DskipTests jib:build -Djib.to.auth.username=$(registery.username) -Djib.to.auth.password=$(register.password) -Djib.to.tags=$(Build. BuildNumber)'
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Artifact
+    inputs:
+      targetPath: '$(Pipeline.Workspace)'
+      artifact: '{{ project_name_combined }} artifact'
+      publishLocation: 'pipeline'

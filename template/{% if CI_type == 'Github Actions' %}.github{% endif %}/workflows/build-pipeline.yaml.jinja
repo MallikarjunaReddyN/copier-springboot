@@ -66,14 +66,14 @@ jobs:
         java-version: '17'
         distribution: 'corretto'
         cache: maven
-    - name: Publish artifact on GitHub Packages
-      if: contains(github.ref, 'release')
-      run: mvn -B clean deploy -DskipTests
-      env:
-        GITHUB_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: {{ project_name }} artifact
+        path: target/
 {% if docker == 'Yes' %}
     - name: Docker build & push
-      run: mvn clean compile jib:build -Djib.to.auth.username={% raw %}${{ secrets.DOCKER_USERNAME }}{% endraw %} -Djib.to.auth.password={% raw %}${{ secrets.DOCKER_PASSWORD }}{% endraw %} -Djib.to.tags={% raw %}${{ github.run_number }}{% endraw %}
+      run: mvn clean package -DskipTests jib:build -Djib.to.auth.username={% raw %}${{ secrets.DOCKER_USERNAME }}{% endraw %} -Djib.to.auth.password={% raw %}${{ secrets.DOCKER_PASSWORD }}{% endraw %} -Djib.to.tags={% raw %}${{ github.run_number }}{% endraw %}
 {% endif %}
 {% if docker == 'Yes' and argocd == 'Yes' -%} 
   update-manifest:

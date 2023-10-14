@@ -46,32 +46,36 @@ This template aims at making it easier to configure spring boot projects with **
 
 - And answer the questions.
 
-
-
 ### Publish project on github
 
-    Create repository and add below secrets before pushing:
+****
 
-- SONAR_HOST_URL
+- Create repository
+  
+  Add below secrets before pushing if **CI  type** is **Github actions**:
+  
+  - SONAR_HOST_URL
+  
+  - SONAR_TOKEN
+  
+  - DOCKER_USERNAME
+  
+  - DOCKER_PASSWORD
+  
+  - WORKFLOW_TOKEN (required only for ArgoCD)
 
-- SONAR_TOKEN
+          Note: Use Personal Access Token as WORKFLOW_TOKEN value
 
-- DOCKER_USERNAME
+          Repository secrets location: 
 
-- DOCKER_PASSWORD
+            select repository -> settings -> Secrets and variables -> Actions
 
-- WORKFLOW_TOKEN (required only for ArgoCD)
-
-Note: Use Personal Access Token as WORKFLOW_TOKEN value
-
-Repository secret location: 
-
-    select repository -> settings -> Secrets and variables -> Actions
-
-
-
-  
-
-      
-
-
+- Configure below variables if **CI type** is **Azure Pipelines**:
+  
+  - registery.username
+  
+  - registery.password
+  
+  and create new service connection for sonarqube with name "sonarcloud"
+  
+  

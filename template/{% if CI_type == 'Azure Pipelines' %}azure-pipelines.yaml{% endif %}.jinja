@@ -28,9 +28,9 @@ steps:
       mavenVersionOption: 'Default'
       mavenAuthenticateFeed: false
       effectivePomSkip: false
-      sonarQubeRunAnalysis: true
+      sonarQubeRunAnalysis: {% if sonarqube == 'Yes' %}true{% endif %}{% if sonarqube == 'No' %}false{% endif %}
       sqMavenPluginVersionChoice: 'latest'
-
+{% if sonarqube == 'Yes' %}
   - task: SonarQubePrepare@5
     displayName: Sonar Scan
     inputs:
@@ -42,7 +42,7 @@ steps:
     displayName: Sonar Pulish
     inputs:
       pollingTimeoutSec: '300'
-
+{% endif %}
   - task: Maven@4
     displayName: Docker Build & Push
     inputs:

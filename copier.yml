@@ -92,11 +92,18 @@ docker:
         - 'No'
 
 container_registery:
-    type: "str"
+    type: str
     help: "The docker Registery to store docker images"
     default: "registry.hub.docker.com"
     validator: "{% if not container_registery %}Please enter container registery for storing you docker images{% endif %}"
     when: "{{ docker == 'Yes' }}"
+
+sonarqube:
+    type: str
+    help: "Do you want sonarqube for static code analysis?"
+    choices: 
+        - 'Yes'
+        - 'No'
 
 CI:
     type: str

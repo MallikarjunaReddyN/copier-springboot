@@ -3,5 +3,7 @@ sonar.projectKey=MallikarjunaReddyN_{{ project_slug }}
 sonar.sources=src/main/java/
 sonar.language=java
 sonar.java.binaries=target/classes
+{% if CI_type == 'Github Actions' %}
 sonar.jacoco.reportPath=target/jacoco.exec
+{% endif %}
 sonar.exclusions=**/domain/**,**/config/**,**/{{project_name_combined}}Application.java

@@ -21,7 +21,7 @@
         <container.image>openjdk:17-alpine</container.image>
 		<jib-maven-plugin.version>3.3.0</jib-maven-plugin.version>
 		{% endif %}
-		<git-commit-id-maven-plugin-version>6.0.0</git-commit-id-maven-plugin-version>
+		<!--<git-commit-id-maven-plugin-version>6.0.0</git-commit-id-maven-plugin-version>-->
 	</properties>
 	<dependencies>
 		<dependency>
@@ -113,11 +113,11 @@
 				</configuration>
 			</plugin>
 			{% endif %}	
-			<plugin>
+			<!--<plugin>
 				<groupId>io.github.git-commit-id</groupId>
 				<artifactId>git-commit-id-maven-plugin</artifactId>
 				<version>${git-commit-id-maven-plugin-version}</version>
-			</plugin>
+			</plugin>-->
 			<plugin>
             	<groupId>org.apache.maven.plugins</groupId>
             	<artifactId>maven-checkstyle-plugin</artifactId>

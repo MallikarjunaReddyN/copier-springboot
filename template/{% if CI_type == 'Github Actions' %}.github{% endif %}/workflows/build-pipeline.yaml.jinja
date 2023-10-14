@@ -53,11 +53,7 @@ jobs:
         run: echo "The Quality Gate status is {% raw %}${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}{% endraw %}"
 {% endif %}          
   build:
-    {% if docker == 'Yes' %}
-    name: Build, Publish & Docker push
-    {% else %}
-    name: Build & Publish
-    {% endif %}
+    {% if docker == 'Yes' %}name: Build, Publish & Docker push{% else %}name: Build & Publish{% endif %}
     runs-on: ubuntu-latest
     needs: [test{% if sonarqube == 'Yes' %}, sonar{% endif %}]
     permissions:

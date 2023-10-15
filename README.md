@@ -2,7 +2,7 @@
 
 A [Copier](https://github.com/copier-org/copier) template for a Spring Boot projects.
 
-This template aims at making it easier to configure spring boot projects with **Java 17, checkstyle, databases (MySQL and PostgreSQL), docker, continous integration (Github Actions and Azure Pipelines), sonarqube, k8s manifests and AKS deployment (Supports with Github Actions only)**. 
+This template aims at making it easier to configure spring boot projects with **Java 17, checkstyle, databases (MySQL and PostgreSQL), docker, continous integration (Github Actions and Azure Pipelines), sonarqube, Helm chart and ArgoCD (Supports with Github Actions only)**. 
 
 ### Prerequisites
 
@@ -77,5 +77,61 @@ This template aims at making it easier to configure spring boot projects with **
   - registery.password
   
   and create new service connection for sonarqube with name "sonarcloud"
+
+### AKS Deployment with Github actions
+
+##### Prerequisites
+
+- Azure account
+
+- AKS cluster
+
+- Azure CLI
+
+- Kubectl
+
+Steps:
+
+- Login into azure by running below command:
   
+  ```
+  az login
+  ```
+
+- Get cluster details by running below command:
   
+  ```
+  az aks get-credentials --resource-group <YOUR_RESOURCEGROUP> --name <YOUR_AKS_CLUSTER_NAME>
+  ```
+
+- Install Ingress in cluster using below kubectl command:
+  
+  ```
+  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
+  ```
+
+- Install Let's Encrypt Cert Manager with below command:
+  
+  ```
+  kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.9.1/cert-manager.yaml
+  ```
+
+- Create ClusterIssuer resource using below snippet:
+  
+  ```yaml
+  apiVersion: cert-manager.io/v1
+  kind: ClusterIssuer
+  metadata:
+    name: letsencrypt
+    namespace: cert-manager
+  spec:
+    acme:
+      server: https://acme-v02.api.letsencrypt.org/directory
+      email: <YOUR_EMAIL_ADDRESS>
+      privateKeySecretRef:
+        name: letsencrypt
+      solvers:
+      - http01:
+          ingress:
+            class: nginx
+  ```

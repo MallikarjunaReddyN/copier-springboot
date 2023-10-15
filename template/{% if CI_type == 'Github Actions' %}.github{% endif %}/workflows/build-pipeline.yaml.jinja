@@ -80,7 +80,7 @@ jobs:
         name: k8s-manifests
         path: k8s/
 
-    {% if aks == 'Yes' %}determine-environment:
+  {% if aks == 'Yes' %}determine-environment:
     if: {% raw %}${{github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'releases/release')}}{% endraw %}
     runs-on: ubuntu-latest
     steps:
@@ -93,19 +93,19 @@ jobs:
           elif [ "{% raw %}${{ github.ref }}{% endraw %}" == "refs/heads/main" ]; then
             echo "qa"
             echo "env=qa" >> "$GITHUB_OUTPUT"
-          elif [ startsWith(github.ref, 'releases/release') ]; then
+          elif [ ${{ startsWith(github.ref, 'releases/release') }} ]; then
             echo "production"
             echo "env=prod" >> "$GITHUB_OUTPUT"
           fi
     outputs:
       env: {% raw %}${{ steps.select-env.outputs.env }}{% endraw %}
 
-    deploy:
+  deploy:
     name: Deploy to AKS
     if: {% raw %}${{github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'releases/release')}}{% endraw %}
     runs-on: ubuntu-latest
     needs: [ build, determine-environment ]
-    environment: {% raw %}${{ steps.select-env.outputs.env }}{% endraw %}
+    environment: {% raw %}${{ needs.determine-environment.outputs.env }}{% endraw %}
     steps:
       - uses: actions/checkout@v3
       - name: Replace tokens
@@ -134,7 +134,7 @@ jobs:
         id: deploy-aks
         uses: Azure/k8s-deploy@v4
         with:
-          namespace: {% raw %}'${{ steps.select-env.outputs.env }}'{% endraw %}
+          namespace: {% raw %}'${{ needs.determine-environment.outputs.env }}'{% endraw %}
           manifests: |
             k8s/deployment.yaml
             k8s/service.yaml

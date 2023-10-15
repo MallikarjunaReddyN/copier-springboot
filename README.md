@@ -64,13 +64,13 @@ This template aims at making it easier to configure spring boot projects with **
   
   - DOCKER_PASSWORD
   
-  - WORKFLOW_TOKEN (required only for ArgoCD)
+  - AZURE_CREDENTIALS (The entire JSON output from the `az ad sp create-for-rbac` command.)
 
-          Note: Use Personal Access Token as WORKFLOW_TOKEN value
+          Secrets & variableslocation: 
 
-          Repository secrets location: 
+            Repo level: select repository -> settings -> Secrets and variables -> Actions
 
-            select repository -> settings -> Secrets and variables -> Actions
+            Org level: select orgnization ->s settings -> Secrets and variables -> Actions
 
 - Configure below variables if **CI type** is **Azure Pipelines**:
   

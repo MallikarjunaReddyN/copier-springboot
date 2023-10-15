@@ -53,5 +53,5 @@ steps:
     displayName: Publish Artifact
     inputs:
       targetPath: '$(Pipeline.Workspace)'
-      artifact: '{{ project_name_combined }} artifact'
+      artifact: '{{ project_slug }} artifact'
       publishLocation: 'pipeline'

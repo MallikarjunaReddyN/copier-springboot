@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ project_package }}
 spec:
-  replicas: {% raw %}{{ .Values.replicaCount }}{% endraw %}
+  replicas: 2
   strategy:
      type: RollingUpdate
   selector:
@@ -18,21 +18,18 @@ spec:
     spec:
       containers:
         - name: {{ project_package }}
-          image: {% raw %}{{ .Values.image.repository }}{% endraw %}
-          pullPolicy: IfNotPresent
+          image: mallireddy1998/{{ project_slug }}:##TAG##
           livenessProbe:
             httpGet:
-              port: {% raw %}{{ .Values.service.port }}{% endraw %}
-              path: /actuator/health/liveness
+              port: {{ server_port }}
+              path: /{{ project_slug }}/v1/actuator/health/liveness
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              port: {% raw %}{{ .Values.service.port }}{% endraw %}
-              path: /actuator/health/readiness
+              port: {{ server_port }}
+              path: /{{ project_slug }}/v1/actuator/health/readiness
             initialDelaySeconds: 60
             periodSeconds: 10
-          #resources:
-          #  {% raw %}{{- toYaml .Values.resources | nindent 12 }}{% endraw %}
           ports:
-            - containerPort: {% raw %}{{ .Values.service.port }}{% endraw %}
+            - containerPort: {{ server_port }}

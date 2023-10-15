@@ -77,38 +77,65 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: {{ project_name }} artifact
-{% if docker == 'Yes' and argocd == 'Yes' -%} 
-  update-manifest:
-    name: Update Image tag in manifest file
+        name: k8s-manifests
+        path: k8s/
+
+    {% if aks == 'Yes' %}determine-environment:
+    if: {% raw %}${{github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'releases/release')}}{% endraw %}
     runs-on: ubuntu-latest
-    needs: build
+    steps:
+      - name: Select environment
+        id: select-env
+        run: |
+          if [ "{% raw %}${{ github.ref }}{% endraw %}" == "refs/heads/dev" ]; then
+            echo "development"
+            echo "env=dev" >> "$GITHUB_OUTPUT"
+          elif [ "{% raw %}${{ github.ref }}{% endraw %}" == "refs/heads/main" ]; then
+            echo "qa"
+            echo "env=qa" >> "$GITHUB_OUTPUT"
+          elif [ startsWith(github.ref, 'releases/release') ]; then
+            echo "production"
+            echo "env=prod" >> "$GITHUB_OUTPUT"
+          fi
+    outputs:
+      env: {% raw %}${{ steps.select-env.outputs.env }}{% endraw %}
+
+    deploy:
+    name: Deploy to AKS
+    if: {% raw %}${{github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'releases/release')}}{% endraw %}
+    runs-on: ubuntu-latest
+    needs: [ build, determine-environment ]
+    environment: {% raw %}${{ steps.select-env.outputs.env }}{% endraw %}
     steps:
       - uses: actions/checkout@v3
+      - name: Replace tokens
+        uses: cschleiden/replace-tokens@v1
         with:
-          repository: MallikarjunaReddyN/k8s-manifests
-          ref: main
-          token: {% raw %}${{ secrets.WORKFLOW_TOKEN }}{% endraw %}
-      - name: setup git config
-        run: |
-          git config --global user.email "ciagent@gmail.com"
-          git config --global user.name "CI Agent"
-      - name: replace tag and save file for feature branches
-        if: {% raw %}${{github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/main' && !contains(github.ref, 'release')}}{% endraw %}
-        run: sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:{% raw %}${{ github.run_number }}{% endraw %}#g' services/{{ project_slug }}/values.yaml
-      - name: replace tag and save file for dev
-        if: {% raw %}${{github.ref == 'refs/heads/dev'}}{% endraw %}
-        run: sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:{% raw %}${{ github.run_number }}{% endraw %}#g' services/{{ project_slug }}/values-dev.yaml
-      - name: replace tag and save file for qa
-        if: {% raw %}${{github.ref == 'refs/heads/main'}}{% endraw %}
-        run: sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:{% raw %}${{ github.run_number }}{% endraw %}#g' services/{{ project_slug }}/values-qa.yaml
-      - name: replace tag and save file for prod
-        if: contains(github.ref, 'release')
-        run: sed -i 's#mallireddy1998.*#mallireddy1998/{{ project_slug }}:{% raw %}${{ github.run_number }}{% endraw %}#g' services/{{ project_slug }}/values-prod.yaml
-      - name: stage & commit changes
-        run: |
-          git add .
-          git commit -am "Update image for - "{% raw %}${{ github.run_number }}{% endraw %}""
-      - name: push changes
-        run: git push origin main
-{%- endif %}
+          tokenPrefix: '##'
+          tokenSuffix: '##'
+          files: '["k8s/*.yaml"]'
+        env:
+          TAG: {% raw %}${{ github.run_number }}{% endraw %}
+      - name: Azure login
+        id: login
+        uses: azure/login@v1.4.3
+        with:
+          creds: {% raw %}${{ secrets.AZURE_CREDENTIALS }}{% endraw %}
+      - name: Set AKS context
+        id: set-context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: {% raw %}'${{ secrets.resource_group }}'{% endraw %}
+          cluster-name: {% raw %}'${{ secrets.cluster_name }}'{% endraw %}
+      - name: Setup kubectl
+        id: install-kubectl
+        uses: azure/setup-kubectl@v3
+      - name: Deploy to AKS
+        id: deploy-aks
+        uses: Azure/k8s-deploy@v4
+        with:
+          namespace: {% raw %}'${{ steps.select-env.outputs.env }}'{% endraw %}
+          manifests: |
+            k8s/deployment.yaml
+            k8s/service.yaml
+            k8s/ingress.yaml{% endif %}

@@ -120,9 +120,9 @@ CI_type:
         - 'Github Actions'
         - 'Azure Pipelines'
 
-argocd:
+aks:
     type: str
-    help: Do you want argoCD for your project?
+    help: Do you want AKS deployment for your project?
     when: "{{ docker == 'Yes' and CI_type == 'Github Actions'}}"
     choices: 
         - 'Yes'

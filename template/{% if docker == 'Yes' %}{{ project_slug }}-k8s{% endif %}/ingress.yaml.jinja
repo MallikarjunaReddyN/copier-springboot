@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ entity|lower }}-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+  tls:
+    - hosts:
+        - ##DOMAIN##
+      secretName: letsencrypt
+  rules:
+    - host: ##DOMAIN##
+      http:
+        paths:
+          - path: /{{ project_slug }}/v1
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ project_slug }}
+                port:
+                  number: {{ server_port }}

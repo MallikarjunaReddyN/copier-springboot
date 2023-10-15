@@ -5,11 +5,11 @@ metadata:
   labels:
     app: {{ project_package }}
 spec:
-  type: {% raw %}{{ .Values.service.type }}{% endraw %}
+  type: ClusterIP
   ports:
     - name: app-port
-      port: {% raw %}{{ .Values.service.port }}{% endraw %}
-      targetPort: {% raw %}{{ .Values.service.port }}{% endraw %}
+      port: {{ server_port }}
+      targetPort: {{ server_port }}
       protocol: TCP
   selector:
      app: {{ project_package }}

@@ -35,7 +35,9 @@ This template aims at making it easier to configure spring boot projects with **
   for windows:
   
   ```
-  python3 -m copier copy --vcs-ref main https://github.com/MallikarjunaReddyN/copier-springboot.git .
+  copier copy --vcs-ref main https://github.com/MallikarjunaReddyN/copier-springboot.git .
+  (or)
+  py -m copier copy --vcs-ref main https://github.com/MallikarjunaReddyN/copier-springboot.git .
   ```
   
   for macOS and linux:
@@ -98,6 +100,16 @@ Steps:
   az login
   ```
 
+- Create a service principal to access your resource group with the `Contributor` role using the [`az ad sp create-for-rbac`](https://learn.microsoft.com/en-us/cli/azure/ad/sp#az-ad-sp-create-for-rbac) command.
+  
+  ```
+  az ad sp create-for-rbac \
+      --name "<SERVICE_PRICIPAL_NAME" \
+      --scope /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RESOURCE_GROUP> \
+      --role Contributor \
+      --sdk-auth
+  ```
+
 - Get cluster details by running below command:
   
   ```
@@ -135,3 +147,7 @@ Steps:
           ingress:
             class: nginx
   ```
+
+Reference links:
+
+- [Build, test, and deploy containers to Azure Kubernetes Service (AKS) using GitHub Actions - Azure Kubernetes Service | Microsoft Learn](https://learn.microsoft.com/en-us/azure/aks/kubernetes-action)

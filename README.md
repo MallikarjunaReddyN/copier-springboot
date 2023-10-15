@@ -82,6 +82,8 @@ This template aims at making it easier to configure spring boot projects with **
 
 ### AKS Deployment with Github actions
 
+****
+
 ##### Prerequisites
 
 - Azure account

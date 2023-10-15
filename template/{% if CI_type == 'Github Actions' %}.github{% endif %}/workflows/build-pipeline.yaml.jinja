@@ -116,6 +116,7 @@ jobs:
           files: '["k8s/*.yaml"]'
         env:
           TAG: {% raw %}${{ github.run_number }}{% endraw %}
+          DOMAIN: <YOUR_DOMAIN_FOR_INGRESS>
       - name: Azure login
         id: login
         uses: azure/login@v1.4.3

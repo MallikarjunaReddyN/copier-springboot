@@ -138,7 +138,7 @@ jobs:
       - name: Create ImagePullSecret
       - uses: Azure/k8s-create-secret@v1.1
         with:
-          container-registry-url: {{ container_registery }}
+          container-registry-url: {% if container_registery == "DockerHub" %}registry.hub.docker.com {% else %} ##YOUR_CONTAINER_REGISTRY## {% endif %}
           container-registry-username: {% raw %}${{ secrets.REGISTRY_USERNAME }}{% endraw %}
           container-registry-password: {% raw %}${{ secrets.REGISTRY_PASSWORD }}{% endraw %}
           secret-name: imagePullSecret

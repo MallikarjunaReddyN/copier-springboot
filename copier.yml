@@ -151,5 +151,5 @@ _message_after_copy: |
     4. Visit http://localhost:{{ server_port }}/{{ project_slug }}/v1/swagger-ui
 
     {% if container_registery == 'ACR' %} 
-    Note: Please replace ##YOUR_CONTAINER_REGISTRY## placeholder with your actaul container registery in pom.xml and k8s/deployment.yaml
+    Note: Please replace ##YOUR_CONTAINER_REGISTRY## placeholder with your actaul container registery in pom.xml, build-pipeline.yaml and k8s/deployment.yaml
     {% endif %}

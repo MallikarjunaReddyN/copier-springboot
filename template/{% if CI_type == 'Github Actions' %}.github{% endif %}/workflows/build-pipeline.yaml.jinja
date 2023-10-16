@@ -1,9 +1,13 @@
-name: {{ project_name }} CI
+name: {{ project_name }} CI {% if aks == 'Yes' %}& CD{% endif %}
 
 on:
   push:
     branches:
-      - '**'
+      - 'dev'
+      - 'main'
+      - 'features/**'
+  pull_request:
+    branches: 'dev'
   workflow_dispatch:
 
 jobs:
@@ -54,6 +58,7 @@ jobs:
 {% endif %}          
   build:
     {% if docker == 'Yes' %}name: Build, Publish & Docker push{% else %}name: Build & Publish{% endif %}
+    if: ${{github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'releases/release')}}
     runs-on: ubuntu-latest
     needs: [test{% if sonarqube == 'Yes' %}, sonar{% endif %}]
     permissions:
@@ -66,7 +71,6 @@ jobs:
         java-version: '17'
         distribution: 'corretto'
         cache: maven
-        path: target/
     {% if docker == 'Yes' %}
     - name: Docker build & push
       run: mvn clean package -DskipTests jib:build -Djib.to.auth.username={% raw %}${{ secrets.DOCKER_USERNAME }}{% endraw %} -Djib.to.auth.password={% raw %}${{ secrets.DOCKER_PASSWORD }}{% endraw %} -Djib.to.tags={% raw %}${{ github.run_number }}{% endraw %}
@@ -81,6 +85,7 @@ jobs:
         path: k8s/
 
   {% if aks == 'Yes' %}determine-environment:
+    name: Determine environment
     if: {% raw %}${{github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'releases/release')}}{% endraw %}
     runs-on: ubuntu-latest
     steps:
@@ -119,7 +124,7 @@ jobs:
           DOMAIN: <YOUR_DOMAIN_FOR_INGRESS>
       - name: Azure login
         id: login
-        uses: azure/login@v1.4.3
+        uses: azure/login@v1
         with:
           creds: {% raw %}${{ secrets.AZURE_CREDENTIALS }}{% endraw %}
       - name: Set AKS context

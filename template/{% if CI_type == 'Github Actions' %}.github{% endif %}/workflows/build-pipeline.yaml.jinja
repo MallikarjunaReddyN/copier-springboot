@@ -120,7 +120,7 @@ jobs:
         env:
           TAG: {% raw %}${{ github.run_number }}{% endraw %}
           REGISTRY_USERNAME: {% raw %}${{ secrets.DOCKER_USERNAME }}{% endraw %}
-          DOMAIN: <YOUR_DOMAIN_FOR_INGRESS>
+          DOMAIN: {% raw %}${{ vars.DOMAIN }}{% endraw %}
       - name: Azure login
         id: login
         uses: azure/login@v1

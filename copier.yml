@@ -93,10 +93,11 @@ docker:
 
 container_registery:
     type: str
-    help: "The docker Registery to store docker images"
-    default: "registry.hub.docker.com"
-    validator: "{% if not container_registery %}Please enter container registery for storing you docker images{% endif %}"
+    help: which container registery do you want to use?
     when: "{{ docker == 'Yes' }}"
+    choices: 
+        - 'DockerHub'
+        - 'ACR'
 
 sonarqube:
     type: str
@@ -148,3 +149,7 @@ _message_after_copy: |
     3. Run "./mvnw spring-boot:run"
 
     4. Visit http://localhost:{{ server_port }}/{{ project_slug }}/v1/swagger-ui
+
+    {% if container_registery == 'ACR' %} Note: {% if container_registery == 'ACR' %} 
+    Note: Please replace ##YOUR_CONTAINER_REGISTRY## placeholder with your actaul container registery
+    {% endif %}

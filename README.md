@@ -60,9 +60,9 @@ This template aims at making it easier to configure spring boot projects with **
   
   - SONAR_TOKEN
   
-  - DOCKER_USERNAME
+  - REGISTRY_USERNAME
   
-  - DOCKER_PASSWORD
+  - REGISTRY_PASSWORD
   
   - AZURE_CREDENTIALS (The entire JSON output from the `az ad sp create-for-rbac` command.)
 
@@ -154,6 +154,10 @@ Reference links:
 
 - [Build, test, and deploy containers to Azure Kubernetes Service (AKS) using GitHub Actions - Azure Kubernetes Service | Microsoft Learn](https://learn.microsoft.com/en-us/azure/aks/kubernetes-action)
 
+- [GitHub - Azure/k8s-deploy: GitHub Action for deploying to Kubernetes clusters](https://github.com/Azure/k8s-deploy)
+
 - [Deploy to Azure Kubernetes Service with Azure Pipelines - Azure Kubernetes Service | Microsoft Learn](https://learn.microsoft.com/en-us/azure/aks/devops-pipeline?tabs=cli&pivots=pipelines-yaml)
+
+- [KubernetesManifest@0 - Deploy to Kubernetes v0 task | Microsoft Learn](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/kubernetes-manifest-v0?view=azure-pipelines)
 
 

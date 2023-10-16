@@ -73,7 +73,7 @@ jobs:
         cache: maven
     {% if docker == 'Yes' %}
     - name: Docker build & push
-      run: mvn clean package -DskipTests jib:build -Djib.to.auth.username={% raw %}${{ secrets.DOCKER_USERNAME }}{% endraw %} -Djib.to.auth.password={% raw %}${{ secrets.DOCKER_PASSWORD }}{% endraw %} -Djib.to.tags={% raw %}${{ github.run_number }}{% endraw %}
+      run: mvn clean package -DskipTests jib:build -Djib.to.auth.username={% raw %}${{ secrets.REGISTRY_USERNAME }}{% endraw %} -Djib.to.auth.password={% raw %}${{ secrets.REGISTRY_PASSWORD }}{% endraw %} -Djib.to.tags={% raw %}${{ github.run_number }}{% endraw %}
     {% else %}
     {% endif %}
     {% if aks == 'Yes' %}- name: Upload artifact
@@ -119,6 +119,7 @@ jobs:
           files: '["k8s/*.yaml"]'
         env:
           TAG: {% raw %}${{ github.run_number }}{% endraw %}
+          REGISTRY_USERNAME: {% raw %}{{ secrets.DOCKER_USERNAME }}{% endraw %}
           DOMAIN: <YOUR_DOMAIN_FOR_INGRESS>
       - name: Azure login
         id: login
@@ -134,6 +135,13 @@ jobs:
       - name: Setup kubectl
         id: install-kubectl
         uses: azure/setup-kubectl@v3
+      - name: Create ImagePullSecret
+      - uses: Azure/k8s-create-secret@v1.1
+        with:
+          container-registry-url: {{ container_registery }}
+          container-registry-username: {% raw %}${{ secrets.REGISTRY_USERNAME }}{% endraw %}
+          container-registry-password: {% raw %}${{ secrets.REGISTRY_PASSWORD }}{% endraw %}
+          secret-name: imagePullSecret
       - name: Deploy to AKS
         id: deploy-aks
         uses: Azure/k8s-deploy@v4
@@ -142,4 +150,6 @@ jobs:
           manifests: |
             k8s/deployment.yaml
             k8s/service.yaml
-            k8s/ingress.yaml{% endif %}
+            k8s/ingress.yaml
+          imagepullsecrets: |
+            imagePullSecret{% endif %}

@@ -4,6 +4,7 @@ trigger:
   - 'features/*'
 
 variables:
+  tag: '$(Build.BuildId)'
   ${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:
     env: Dev
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
@@ -62,11 +63,9 @@ stages:
         mavenPomFile: 'pom.xml'
         goals: 'clean package -DskipTests jib:build -Djib.to.auth.username=$(registery.username) -Djib.to.auth.password=$(register.password) -Djib.to.tags=$(Build. BuildNumber)'
 
-    {% if aks == 'Yes' %}- task: PublishPipelineArtifact@1
-      displayName: Publish Artifact
-      inputs:
-        artifactName: 'manifests'
-        path: 'k8s'
+    {% if aks == 'Yes' %}- upload: k8s
+      displayName: Upload k8s manifests
+      artifact: k8s
     
   - stage: Deploy
     displayName: AKS Deploy
@@ -83,14 +82,10 @@ stages:
         runOnce:
           deploy:
             steps:
-            - task: DownloadPipelineArtifact@2
-              inputs:
-                artifactName: 'manifests'
-                downloadPath: '$(System.ArtifactsDirectory)/k8s'
             - task: replacetoken@3
               displayName: 'Replace Tokens'
               inputs:
-              targetFiles: '$(System.ArtifactsDirectory)/k8s/*.yaml'
+              targetFiles: '$(Pipeline.Workspace)/k8s/*.yaml'
               tokenPrefix: '##'
               tokenSuffix: '##'
 
@@ -102,4 +97,6 @@ stages:
                 manifests: |
                   $(System.ArtifactsDirectory)/k8s/deployment.yml
                   $(System.ArtifactsDirectory)/k8s/service.yml
-                  $(System.ArtifactsDirectory)/k8s/ingress.yml{% endif %}
+                  $(System.ArtifactsDirectory)/k8s/ingress.yml
+                containers: |
+                  mallireddy1998/{{ project_slug }}:$(tag){% endif %}

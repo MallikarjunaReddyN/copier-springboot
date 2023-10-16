@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: {{ project_package }}
-          image: mallireddy1998/{{ project_slug }}:##TAG##
+          image: {% if container_registery == "DockerHub" %}##REGISTRY_USERNAME##{% else %}##YOUR_CONTAINER_REGISTRY##{% endif %}/{{ project_slug }}:##TAG##
           livenessProbe:
             httpGet:
               port: {{ server_port }}

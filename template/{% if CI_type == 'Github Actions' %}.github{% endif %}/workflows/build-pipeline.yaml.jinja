@@ -75,16 +75,14 @@ jobs:
     - name: Docker build & push
       run: mvn clean package -DskipTests jib:build -Djib.to.auth.username={% raw %}${{ secrets.DOCKER_USERNAME }}{% endraw %} -Djib.to.auth.password={% raw %}${{ secrets.DOCKER_PASSWORD }}{% endraw %} -Djib.to.tags={% raw %}${{ github.run_number }}{% endraw %}
     {% else %}
-    - name: Maven build
-      run: mvn clean package -DskipTests
     {% endif %}
-    - name: Upload artifact
+    {% if aks == 'Yes' %}- name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: k8s-manifests
         path: k8s/
 
-  {% if aks == 'Yes' %}determine-environment:
+  determine-environment:
     name: Determine environment
     if: {% raw %}${{github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'releases/release')}}{% endraw %}
     runs-on: ubuntu-latest

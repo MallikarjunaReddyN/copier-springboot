@@ -58,7 +58,7 @@ jobs:
 {% endif %}          
   build:
     {% if docker == 'Yes' %}name: Build, Publish & Docker push{% else %}name: Build & Publish{% endif %}
-    if: ${{github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'releases/release')}}
+    if: {% raw %}${{github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'releases/release')}}{% endraw %}
     runs-on: ubuntu-latest
     needs: [test{% if sonarqube == 'Yes' %}, sonar{% endif %}]
     permissions:

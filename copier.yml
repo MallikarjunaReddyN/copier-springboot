@@ -150,7 +150,7 @@ _message_after_copy: |
 
     4. Visit http://localhost:{{ server_port }}/{{ project_slug }}/v1/swagger-ui
 
-    {% if sonarqube == 'YES' %} 
+    {% if sonarqube == 'Yes' %} 
     Note: Please replace ##YOUR_ORGANIZATION## placeholder with your actaul organization in sonar-project.properties
     {% endif %}
     {% if container_registery == 'ACR' %} 

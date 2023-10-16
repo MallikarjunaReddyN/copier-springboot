@@ -5,11 +5,11 @@ trigger:
 
 variables:
   tag: '$(Build.BuildId)'
-  ${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:
+  {% raw %}${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:{% endraw %}
     env: Dev
-  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+  {% raw %}${{ if eq(variables['Build.SourceBranchName'], 'main') }}:{% endraw %}
     env: QA
-  ${{ if eq(variables['Build.SourceBranchName'], 'releases/release') }}:
+  {% raw %}${{ if eq(variables['Build.SourceBranchName'], 'releases/release') }}:{% endraw %}
     env: Prod
   
 stages:
@@ -71,13 +71,13 @@ stages:
     displayName: AKS Deploy
     dependsOn: Build
     variables:
-    - group: ${{variables.env}}
+    - group: {% raw %}${{variables.env}}{% endraw %}
     jobs:
     - deployment: AKS Deploy
       displayName: AKS Deploy
       pool:
         vmImage: 'ubuntu-latest'
-      environment: ${{variables.env}}
+      environment: {% raw %}${{variables.env}}{% endraw %}
       strategy:
         runOnce:
           deploy:

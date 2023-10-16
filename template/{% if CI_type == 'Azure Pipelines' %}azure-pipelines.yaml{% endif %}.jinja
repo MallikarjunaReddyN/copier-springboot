@@ -1,57 +1,105 @@
 trigger:
-- '*'
+  - 'dev'
+  - 'main'
+  - 'features/*'
 
-pool:
-  vmImage: 'ubuntu-latest'
-  demands: 
-  - maven
+variables:
+  ${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:
+    env: Dev
+  ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+    env: QA
+  ${{ if eq(variables['Build.SourceBranchName'], 'releases/release') }}:
+    env: Prod
+  
+stages:
+- stage: Build
+  displayName: Unit Tests, Sonar Scan, Build & Docker push
+  jobs: 
+  - job: Build
+    displayName: Unit Tests, Sonar Scan, Build & Docker push 
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: JavaToolInstaller@0
+      displayName: 'Installing Java 17'
+      inputs:
+        versionSpec: '17'
+        jdkArchitectureOption: 'x86'
+        jdkSourceOption: 'PreInstalled'
 
-steps:
-  - task: JavaToolInstaller@0
-    displayName: 'Installing Java 17'
-    inputs:
-      versionSpec: '17'
-      jdkArchitectureOption: 'x86'
-      jdkSourceOption: 'PreInstalled'
-
-  - task: Maven@4
-    displayName: Test and Publish Test Results
-    inputs:
-      mavenPomFile: 'pom.xml'
-      goals: 'clean package'
-      publishJUnitResults: true
-      testResultsFiles: '**/surefire-reports/TEST-*.xml'
-      testRunTitle: 'Unit Tests'
-      codeCoverageToolOption: 'JaCoCo'
-      classFilter: -:{{group_id}}.{{package_name}}.model.*,-:{{group_id}}.{{package_name}}.config.*,-:{{group_id}}.{{package_name}}.repository.*
-      javaHomeOption: 'JDKVersion'
-      mavenVersionOption: 'Default'
-      mavenAuthenticateFeed: false
-      effectivePomSkip: false
-      sonarQubeRunAnalysis: {% if sonarqube == 'Yes' %}true{% endif %}{% if sonarqube == 'No' %}false{% endif %}
-      sqMavenPluginVersionChoice: 'latest'
+    - task: Maven@4
+      displayName: 'Test and Publish Test Results'
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'clean package'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        testRunTitle: 'Unit Tests'
+        codeCoverageToolOption: 'JaCoCo'
+        classFilter: -:{{group_id}}.{{package_name}}.model.*,-:{{group_id}}.{{package_name}}.config.*,-:{{group_id}}.{{package_name}}.repository.*
+        javaHomeOption: 'JDKVersion'
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: {% if sonarqube == 'Yes' %}true{% endif %}{% if sonarqube == 'No' %}false{% endif %}
+        sqMavenPluginVersionChoice: 'latest'
 {% if sonarqube == 'Yes' %}
-  - task: SonarQubePrepare@5
-    displayName: Sonar Scan
-    inputs:
-      SonarQube: 'sonarcloud' # 'sonarcloud' is service connection name
-      scannerMode: 'CLI'
-      configMode: 'file'
+    - task: SonarQubePrepare@5
+      displayName: Sonar Scan
+      inputs:
+        SonarQube: 'sonarcloud' # 'sonarcloud' is service connection name
+        scannerMode: 'CLI'
+        configMode: 'file'
         
-  - task: SonarQubePublish@5
-    displayName: Sonar Pulish
-    inputs:
-      pollingTimeoutSec: '300'
+    - task: SonarQubePublish@5
+      displayName: Sonar Pulish
+      inputs:
+        pollingTimeoutSec: '300'
 {% endif %}
-  - task: Maven@4
-    displayName: Docker Build & Push
-    inputs:
-      mavenPomFile: 'pom.xml'
-      goals: 'clean package -DskipTests jib:build -Djib.to.auth.username=$(registery.username) -Djib.to.auth.password=$(register.password) -Djib.to.tags=$(Build. BuildNumber)'
+    - task: Maven@4
+      displayName: Docker Build & Push
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'clean package -DskipTests jib:build -Djib.to.auth.username=$(registery.username) -Djib.to.auth.password=$(register.password) -Djib.to.tags=$(Build. BuildNumber)'
 
-  - task: PublishPipelineArtifact@1
-    displayName: Publish Artifact
-    inputs:
-      targetPath: '$(Pipeline.Workspace)'
-      artifact: '{{ project_slug }} artifact'
-      publishLocation: 'pipeline'
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Artifact
+      inputs:
+        artifactName: 'manifests'
+        path: 'k8s'
+    
+  - stage: Deploy
+    displayName: AKS Deploy
+    dependsOn: Build
+    variables:
+    - group: ${{variables.env}}
+    jobs:
+    - deployment: AKS Deploy
+      displayName: AKS Deploy
+      pool:
+        vmImage: 'ubuntu-latest'
+      environment: ${{variables.env}}
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: DownloadPipelineArtifact@2
+              inputs:
+                artifactName: 'manifests'
+                downloadPath: '$(System.ArtifactsDirectory)/k8s'
+            - task: replacetoken@3
+              displayName: 'Replace Tokens'
+              inputs:
+              targetFiles: '$(System.ArtifactsDirectory)/k8s/*.yaml'
+              tokenPrefix: '##'
+              tokenSuffix: '##'
+
+            - task: KubernetesManifest@0
+              displayName: Deploy to Kubernetes cluster
+              inputs:
+                action: deploy
+                namespace: $(k8sNamespace)
+                manifests: |
+                  $(System.ArtifactsDirectory)/k8s/deployment.yml
+                  $(System.ArtifactsDirectory)/k8s/service.yml
+                  $(System.ArtifactsDirectory)/k8s/ingress.yml

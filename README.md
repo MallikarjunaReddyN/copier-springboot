@@ -2,7 +2,7 @@
 
 A [Copier](https://github.com/copier-org/copier) template for a Spring Boot projects.
 
-This template aims at making it easier to configure spring boot projects with **Java 17, checkstyle, databases (MySQL and PostgreSQL), docker, continous integration (Github Actions and Azure Pipelines), sonarqube, K8S manifests and AKS deployment (Supports with Github Actions only)**. 
+This template aims at making it easier to configure spring boot projects with **Java 17, checkstyle, databases (MySQL and PostgreSQL), docker, continous integration (Github Actions and Azure Pipelines), sonarqube, K8S manifests and AKS deployment**. 
 
 ### Prerequisites
 
@@ -153,3 +153,7 @@ Steps:
 Reference links:
 
 - [Build, test, and deploy containers to Azure Kubernetes Service (AKS) using GitHub Actions - Azure Kubernetes Service | Microsoft Learn](https://learn.microsoft.com/en-us/azure/aks/kubernetes-action)
+
+- [Deploy to Azure Kubernetes Service with Azure Pipelines - Azure Kubernetes Service | Microsoft Learn](https://learn.microsoft.com/en-us/azure/aks/devops-pipeline?tabs=cli&pivots=pipelines-yaml)
+
+

@@ -123,7 +123,7 @@ CI_type:
 aks:
     type: str
     help: Do you want AKS deployment for your project?
-    when: "{{ docker == 'Yes' and CI_type == 'Github Actions'}}"
+    when: "{{ docker == 'Yes' }}"
     choices: 
         - 'Yes'
         - 'No'

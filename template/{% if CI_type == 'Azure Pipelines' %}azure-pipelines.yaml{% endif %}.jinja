@@ -62,7 +62,7 @@ stages:
         mavenPomFile: 'pom.xml'
         goals: 'clean package -DskipTests jib:build -Djib.to.auth.username=$(registery.username) -Djib.to.auth.password=$(register.password) -Djib.to.tags=$(Build. BuildNumber)'
 
-    - task: PublishPipelineArtifact@1
+    {% if aks == 'Yes' %}- task: PublishPipelineArtifact@1
       displayName: Publish Artifact
       inputs:
         artifactName: 'manifests'
@@ -102,4 +102,4 @@ stages:
                 manifests: |
                   $(System.ArtifactsDirectory)/k8s/deployment.yml
                   $(System.ArtifactsDirectory)/k8s/service.yml
-                  $(System.ArtifactsDirectory)/k8s/ingress.yml
+                  $(System.ArtifactsDirectory)/k8s/ingress.yml{% endif %}

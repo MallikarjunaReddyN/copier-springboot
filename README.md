@@ -8,7 +8,7 @@ This template aims at making it easier to configure spring boot projects with **
 
 ****
 
-##### For generating template:
+##### For generating project:
 
 - **Python** - [Download Python | Python.org](https://www.python.org/downloads/)
 

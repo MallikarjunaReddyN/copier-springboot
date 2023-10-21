@@ -8,7 +8,7 @@ This template aims at making it easier to configure spring boot projects with **
 
 ****
 
-##### For generating project:
+##### For generating template:
 
 - **Python** - [Download Python | Python.org](https://www.python.org/downloads/)
 
@@ -70,7 +70,7 @@ This template aims at making it easier to configure spring boot projects with **
 
             Repo level: select repository -> settings -> Secrets and variables -> Actions
 
-            Org level: select orgnization -> settings -> Secrets and variables -> Actions
+            Org level: select orgnization ->s settings -> Secrets and variables -> Actions
 
 - Configure below variables if **CI type** is **Azure Pipelines**:
   
@@ -149,6 +149,22 @@ Steps:
           ingress:
             class: nginx
   ```
+
+
+
+### AKS Deployment with Azure Pipelines
+
+****
+
+- Create AKS and Azure container registery(ACR)
+
+- Attach ACR with AKS
+
+- Create Azure pipeline envirnoment with Kubernetes resource.
+
+- Update your Envirnoment name and AKS namespace which you selected or created at time of envirnoment creation in azure-pipelines.yaml file.
+  
+   
 
 Reference links:
 

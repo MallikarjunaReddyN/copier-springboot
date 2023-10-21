@@ -2,22 +2,26 @@ trigger:
   - 'dev'
   - 'main'
   - 'features/*'
+  - 'releases/*'
 
 variables:
+  isDev: $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
+  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  isRelease: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/release')]
   tag: '$(Build.BuildId)'
   {% raw %}${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:{% endraw %}
     env: Dev
   {% raw %}${{ if eq(variables['Build.SourceBranchName'], 'main') }}:{% endraw %}
     env: QA
-  {% raw %}${{ if eq(variables['Build.SourceBranchName'], 'releases/release') }}:{% endraw %}
+  {% raw %}${{ if startsWith(variables['Build.SourceBranchName'], 'releases/release') }}:{% endraw %}
     env: Prod
   
 stages:
 - stage: Build
-  displayName: Unit Tests, Sonar Scan, Build & Docker push
+  displayName: {% if docker == 'Yes' %}Unit Tests, Sonar Scan, Build & Docker push{% else %}Unit Tests, Sonar Scan & Build{% endif %}
   jobs: 
   - job: Build
-    displayName: Unit Tests, Sonar Scan, Build & Docker push 
+    displayName: {% if docker == 'Yes' %}Unit Tests, Sonar Scan, Build & Docker push{% else %}Unit Tests, Sonar Scan & Build{% endif %}
     pool:
       vmImage: 'ubuntu-latest'
     steps:
@@ -25,7 +29,7 @@ stages:
       displayName: 'Installing Java 17'
       inputs:
         versionSpec: '17'
-        jdkArchitectureOption: 'x86'
+        jdkArchitectureOption: 'x64'
         jdkSourceOption: 'PreInstalled'
 
     - task: Maven@4
@@ -44,8 +48,8 @@ stages:
         effectivePomSkip: false
         sonarQubeRunAnalysis: {% if sonarqube == 'Yes' %}true{% endif %}{% if sonarqube == 'No' %}false{% endif %}
         sqMavenPluginVersionChoice: 'latest'
-{% if sonarqube == 'Yes' %}
-    - task: SonarQubePrepare@5
+
+    {% if sonarqube == 'Yes' %}- task: SonarQubePrepare@5
       displayName: Sonar Scan
       inputs:
         SonarQube: 'sonarcloud' # 'sonarcloud' is service connection name
@@ -55,21 +59,24 @@ stages:
     - task: SonarQubePublish@5
       displayName: Sonar Publish
       inputs:
-        pollingTimeoutSec: '300'
-{% endif %}
-    - task: Maven@4
+        pollingTimeoutSec: '300'{% endif %}
+
+    {% if docker == 'Yes' %}- task: Maven@4
+      condition: or(variables.isDev, variables.isMain ,variables.isRelease)
       displayName: Docker Build & Push
       inputs:
         mavenPomFile: 'pom.xml'
-        goals: 'clean package -DskipTests jib:build -Djib.to.auth.username=$(registery.username) -Djib.to.auth.password=$(register.password) -Djib.to.tags=$(Build. BuildNumber)'
+        goals: 'clean package -DskipTests jib:build -Djib.to.auth.username=$(registery.username) -Djib.to.auth.password=$(register.password) -Djib.to.tags=$(tag)'{% endif %}
 
     {% if aks == 'Yes' %}- upload: k8s
+      condition: or(variables.isDev, variables.isMain ,variables.isRelease)
       displayName: Upload k8s manifests
       artifact: k8s
     
   - stage: Deploy
     displayName: AKS Deploy
     dependsOn: Build
+    condition: or(variables.isDev, variables.isMain ,variables.isRelease)
     variables:
     - group: {% raw %}${{variables.env}}{% endraw %}
     jobs:
@@ -77,7 +84,7 @@ stages:
       displayName: AKS Deploy
       pool:
         vmImage: 'ubuntu-latest'
-      environment: {% raw %}${{variables.env}}{% endraw %}
+      environment: {% raw %}'${{variables.env}}.default'{% endraw %} # default is a namespace value change as per your requirement
       strategy:
         runOnce:
           deploy:

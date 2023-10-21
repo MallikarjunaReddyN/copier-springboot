@@ -8,7 +8,7 @@ This template aims at making it easier to configure spring boot projects with **
 
 ****
 
-##### For generating template:
+##### For generating project:
 
 - **Python** - [Download Python | Python.org](https://www.python.org/downloads/)
 
@@ -70,7 +70,7 @@ This template aims at making it easier to configure spring boot projects with **
 
             Repo level: select repository -> settings -> Secrets and variables -> Actions
 
-            Org level: select orgnization ->s settings -> Secrets and variables -> Actions
+            Org level: select orgnization -> settings -> Secrets and variables -> Actions
 
 - Configure below variables if **CI type** is **Azure Pipelines**:
   

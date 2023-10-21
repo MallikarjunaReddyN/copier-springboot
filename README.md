@@ -163,6 +163,14 @@ Steps:
 - Create Azure pipeline envirnoment with Kubernetes resource.
 
 - Update your Envirnoment name and AKS namespace which you selected or created at time of envirnoment creation in azure-pipelines.yaml file.
+
+- Create sonarqube/snoarcloud service connection for sonar scan and update service connection name in Sonar Scan task.
+
+- Create variable group with name `registery-credentials` and add two variable in that variable group with REGISTERY_USERNAME, REGISTERY_PASSWORD
+
+- Create one more variable group to store DOMAIN variables for Ingress host.
+  
+  In my case I created `Dev` for development, `QA` for testing and `Prod` for production. 
   
    
 

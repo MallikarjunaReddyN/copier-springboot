@@ -1,77 +1,85 @@
 trigger:
-  - 'dev'
-  - 'main'
-  - 'features/*'
-  - 'releases/*'
+  branches:
+    include:
+      - dev
+      - main
+      - features/*
+      - releases/*
 
 variables:
-  isDev: $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
-  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-  isRelease: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/release')]
-  tag: '$(Build.BuildId)'
-  {% raw %}${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:{% endraw %}
-    env: Dev
-  {% raw %}${{ if eq(variables['Build.SourceBranchName'], 'main') }}:{% endraw %}
-    env: QA
-  {% raw %}${{ if startsWith(variables['Build.SourceBranchName'], 'releases/release') }}:{% endraw %}
-    env: Prod
-  
+  - group: registery-credentials
+  - name: isDev
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
+  - name: isMain
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  - name: isRelease
+    value: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/release')]
+  - name: tag
+    value: '$(Build.BuildId)'
+  - name: env
+    {% raw %}${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:{% endraw %}
+      value: Dev
+    {% raw %}${{ if eq(variables['Build.SourceBranchName'], 'main') }}:{% endraw %}
+      value: QA
+    {% raw %}${{ if startsWith(variables['Build.SourceBranchName'], 'releases/release') }}:{% endraw %}
+      value: Prod
+
 stages:
-- stage: Build
-  displayName: {% if docker == 'Yes' %}Unit Tests, Sonar Scan, Build & Docker push{% else %}Unit Tests, Sonar Scan & Build{% endif %}
-  jobs: 
-  - job: Build
+  - stage: Build
     displayName: {% if docker == 'Yes' %}Unit Tests, Sonar Scan, Build & Docker push{% else %}Unit Tests, Sonar Scan & Build{% endif %}
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: JavaToolInstaller@0
-      displayName: 'Installing Java 17'
-      inputs:
-        versionSpec: '17'
-        jdkArchitectureOption: 'x64'
-        jdkSourceOption: 'PreInstalled'
+    jobs:
+    - job: Build
+      displayName: {% if docker == 'Yes' %}Unit Tests, Sonar Scan, Build & Docker push{% else %}Unit Tests, Sonar Scan & Build{% endif %}
+      pool:
+        vmImage: 'ubuntu-latest'
+      steps:
+      - task: JavaToolInstaller@0
+        displayName: 'Installing Java 17'
+        inputs:
+          versionSpec: '17'
+          jdkArchitectureOption: 'x64'
+          jdkSourceOption: 'PreInstalled'
 
-    - task: Maven@4
-      displayName: 'Test and Publish Test Results'
-      inputs:
-        mavenPomFile: 'pom.xml'
-        goals: 'clean package'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        testRunTitle: 'Unit Tests'
-        codeCoverageToolOption: 'JaCoCo'
-        classFilter: -:{{group_id}}.{{package_name}}.model.*,-:{{group_id}}.{{package_name}}.config.*,-:{{group_id}}.{{package_name}}.repository.*
-        javaHomeOption: 'JDKVersion'
-        mavenVersionOption: 'Default'
-        mavenAuthenticateFeed: false
-        effectivePomSkip: false
-        sonarQubeRunAnalysis: {% if sonarqube == 'Yes' %}true{% endif %}{% if sonarqube == 'No' %}false{% endif %}
-        sqMavenPluginVersionChoice: 'latest'
+      - task: Maven@4
+        displayName: 'Test and Publish Test Results'
+        inputs:
+          mavenPomFile: 'pom.xml'
+          goals: 'clean package'
+          publishJUnitResults: true
+          testResultsFiles: '**/surefire-reports/TEST-*.xml'
+          testRunTitle: 'Unit Tests'
+          codeCoverageToolOption: 'JaCoCo'
+          classFilter: -:{{group_id}}.{{package_name}}.model.*,-:{{group_id}}.{{package_name}}.config.*,-:{{group_id}}.{{package_name}}.repository.*
+          javaHomeOption: 'JDKVersion'
+          mavenVersionOption: 'Default'
+          mavenAuthenticateFeed: false
+          effectivePomSkip: false
+          sonarQubeRunAnalysis: {% if sonarqube == 'Yes' %}true{% endif %}{% if sonarqube == 'No' %}false{% endif %}
+          sqMavenPluginVersionChoice: 'latest'
 
-    {% if sonarqube == 'Yes' %}- task: SonarQubePrepare@5
-      displayName: Sonar Scan
-      inputs:
-        SonarQube: 'sonarcloud' # 'sonarcloud' is service connection name
-        scannerMode: 'CLI'
-        configMode: 'file'
+      {% if sonarqube == 'Yes' %}- task: SonarQubePrepare@5
+        displayName: Sonar Scan
+        inputs:
+          SonarQube: 'sonarcloud' # 'sonarcloud' is service connection name
+          scannerMode: 'CLI'
+          configMode: 'file'
         
-    - task: SonarQubePublish@5
-      displayName: Sonar Publish
-      inputs:
-        pollingTimeoutSec: '300'{% endif %}
+      - task: SonarQubePublish@5
+        displayName: Sonar Publish
+        inputs:
+          pollingTimeoutSec: '300'{% endif %}
 
-    {% if docker == 'Yes' %}- task: Maven@4
-      condition: or(variables.isDev, variables.isMain ,variables.isRelease)
-      displayName: Docker Build & Push
-      inputs:
-        mavenPomFile: 'pom.xml'
-        goals: 'clean package -DskipTests jib:build -Djib.to.auth.username=$(registery.username) -Djib.to.auth.password=$(register.password) -Djib.to.tags=$(tag)'{% endif %}
+      {% if docker == 'Yes' %}- task: Maven@4
+        condition: or(variables.isDev, variables.isMain ,variables.isRelease)
+        displayName: Docker Build & Push
+        inputs:
+          mavenPomFile: 'pom.xml'
+          goals: 'clean package -DskipTests jib:build -Djib.to.auth.username=$(registery.username) -Djib.to.auth.password=$(register.password) -Djib.to.tags=$(tag)'{% endif %}
 
-    {% if aks == 'Yes' %}- upload: k8s
-      condition: or(variables.isDev, variables.isMain ,variables.isRelease)
-      displayName: Upload k8s manifests
-      artifact: k8s
+      {% if aks == 'Yes' %}- upload: k8s
+        condition: or(variables.isDev, variables.isMain ,variables.isRelease)
+        displayName: Upload k8s manifests
+        artifact: k8s
     
   - stage: Deploy
     displayName: AKS Deploy
@@ -80,7 +88,7 @@ stages:
     variables:
     - group: {% raw %}${{variables.env}}{% endraw %}
     jobs:
-    - deployment: AKS Deploy
+    - deployment: AKSDeploy
       displayName: AKS Deploy
       pool:
         vmImage: 'ubuntu-latest'
@@ -89,21 +97,20 @@ stages:
         runOnce:
           deploy:
             steps:
-            - task: replacetoken@3
+            - task: replacetokens@3
               displayName: 'Replace Tokens'
               inputs:
-              targetFiles: '$(Pipeline.Workspace)/k8s/*.yaml'
-              tokenPrefix: '##'
-              tokenSuffix: '##'
+                targetFiles: '$(Pipeline.Workspace)/k8s/*.yaml'
+                tokenPrefix: '##'
+                tokenSuffix: '##'
 
             - task: KubernetesManifest@0
               displayName: Deploy to Kubernetes cluster
               inputs:
                 action: deploy
-                namespace: $(k8sNamespace)
                 manifests: |
                   $(System.ArtifactsDirectory)/k8s/deployment.yml
                   $(System.ArtifactsDirectory)/k8s/service.yml
                   $(System.ArtifactsDirectory)/k8s/ingress.yml
                 containers: |
-                  mallireddy1998/{{ project_slug }}:$(tag){% endif %}
+                  {% if container_registery == "DockerHub" %}##REGISTRY_USERNAME##{% else %}##YOUR_CONTAINER_REGISTRY##{% endif %}/score-service:$(tag){% endif %}

@@ -54,7 +54,7 @@ stages:
           mavenVersionOption: 'Default'
           mavenAuthenticateFeed: false
           effectivePomSkip: false
-          sonarQubeRunAnalysis: {% if sonarqube == 'Yes' %}true{% endif %}{% else %}false{% endif %}
+          sonarQubeRunAnalysis: {% if sonarqube == 'Yes' %}true{% else %}false{% endif %}
           sqMavenPluginVersionChoice: 'latest'
 
       {% if sonarqube == 'Yes' %}- task: SonarQubePrepare@5

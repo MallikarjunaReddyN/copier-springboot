@@ -135,7 +135,7 @@
        			 	</execution>
     			</executions>
         	</plugin>
-			{% if sonarqube == 'Yes' and CI_type == 'Github Actions' %}
+			{% if sca == 'Yes' and CI_type == 'Github Actions' %}
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>

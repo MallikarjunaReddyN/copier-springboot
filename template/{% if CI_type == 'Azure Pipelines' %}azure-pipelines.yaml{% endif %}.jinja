@@ -54,20 +54,40 @@ stages:
           mavenVersionOption: 'Default'
           mavenAuthenticateFeed: false
           effectivePomSkip: false
-          sonarQubeRunAnalysis: {% if sonarqube == 'Yes' %}true{% else %}false{% endif %}
+          sonarQubeRunAnalysis: false
           sqMavenPluginVersionChoice: 'latest'
 
-      {% if sonarqube == 'Yes' %}- task: SonarQubePrepare@5
+      {% if sca == 'Yes' %}{% if sca_type == 'SonarQube' %}- task: SonarQubePrepare@5
         displayName: Sonar Scan
         inputs:
-          SonarQube: 'sonarcloud' # 'sonarcloud' is service connection name
+          SonarQube: 'sonarqube' # 'sonarqube' is service connection name
           scannerMode: 'CLI'
           configMode: 'file'
-        
+      - task: SonarQubeAnalyze@5
+        inputs:
+          jdkversion: 'JAVA_HOME_17_X64'
       - task: SonarQubePublish@5
         displayName: Sonar Publish
         inputs:
           pollingTimeoutSec: '300'{% endif %}
+
+      {% if sca_type == 'SonarCloud' %}- task: SonarCloudPrepare@1
+        displayName: Sonar Scan Prepare
+        inputs:
+          SonarCloud: 'sonarcloud' # 'sonarcloud' is service connection name
+          organization: 'mallikarjunareddyn'
+          scannerMode: 'CLI'
+          configMode: 'file'
+      
+      - task: SonarCloudAnalyze@1
+        displayName: Sonar Scan Analyze
+        inputs:
+          jdkversion: 'JAVA_HOME_17_X64'
+      
+      - task: SonarCloudPublish@1
+        displayName: Sonar Publish
+        inputs:
+          pollingTimeoutSec: '300'{% endif %}{% endif %}
 
       {% if docker == 'Yes' %}- task: Maven@4
         condition: or(variables.isDev, variables.isMain ,variables.isRelease)

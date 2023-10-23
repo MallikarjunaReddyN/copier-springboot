@@ -99,12 +99,20 @@ container_registery:
         - 'DockerHub'
         - 'ACR'
 
-sonarqube:
+sca:
     type: str
-    help: "Do you want sonarqube for static code analysis?"
+    help: Do you want static code analysis for you project?
     choices: 
         - 'Yes'
         - 'No'
+
+sca_type:
+    type: str
+    help: What static code analysis service do you want to use?
+    when: "{{ sca == 'Yes' }}"
+    choices:
+        - 'SonarCloud'
+        - 'SonarQube'
 
 CI:
     type: str
@@ -150,6 +158,6 @@ _message_after_copy: |
 
     4. Visit http://localhost:{{ server_port }}/{{ project_slug }}/v1/swagger-ui
 
-    {% if sonarqube == 'Yes' %}Note: Please replace ##YOUR_ORGANIZATION## placeholder with your actaul organization in sonar-project.properties{% endif %}
+    {% if sca == 'Yes' %}Note: Please replace ##YOUR_ORGANIZATION## placeholder with your actaul organization in sonar-project.properties{% endif %}
     {% if container_registery == 'ACR' %}Note: Please replace ##YOUR_CONTAINER_REGISTRY## placeholder with your actaul container registery in pom.xml, build-pipeline.yaml and k8s/deployment.yaml{% endif %}
     {% if container_registery == 'DockerHub' %} Note: Please replace ##REGISTERY_USERNAME## placeholder with your actaul dockerhub username in pom.xml{% endif %}

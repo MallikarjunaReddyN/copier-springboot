@@ -70,7 +70,6 @@ stages:
         displayName: Sonar Publish
         inputs:
           pollingTimeoutSec: '300'{% endif %}
-
       {% if sca_type == 'SonarCloud' %}- task: SonarCloudPrepare@1
         displayName: Sonar Scan Prepare
         inputs:

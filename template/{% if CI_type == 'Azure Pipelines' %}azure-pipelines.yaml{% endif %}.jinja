@@ -103,7 +103,7 @@ stages:
   - stage: Deploy
     displayName: AKS Deploy
     dependsOn: Build
-    condition: or(variables.isDev, variables.isMain ,variables.isRelease)
+    condition: and(succeeded(), or(variables.isDev, variables.isMain ,variables.isRelease))
     variables:
     - group: {% raw %}${{variables.env}}{% endraw %}
     jobs:

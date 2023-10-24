@@ -49,7 +49,7 @@ stages:
           testResultsFiles: '**/surefire-reports/TEST-*.xml'
           testRunTitle: 'Unit Tests'
           codeCoverageToolOption: 'JaCoCo'
-          classFilter: -:{{group_id}}.{{package_name}}.model.*,-:{{group_id}}.{{package_name}}.config.*,-:{{group_id}}.{{package_name}}.repository.*
+          classFilter: -:{{group_id}}.{{package_name}}.domain.*,-:{{group_id}}.{{package_name}}.config.*,-:{{group_id}}.{{package_name}}.repository.*,-:{{group_id}}.{{package_name}}.exception.*
           javaHomeOption: 'JDKVersion'
           mavenVersionOption: 'Default'
           mavenAuthenticateFeed: false

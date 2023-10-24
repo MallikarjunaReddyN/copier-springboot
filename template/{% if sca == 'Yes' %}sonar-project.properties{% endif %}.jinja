@@ -4,4 +4,4 @@ sonar.sources=src/main/java/
 sonar.language=java
 sonar.java.binaries=target/classes
 {% if CI_type == 'Github Actions' %}sonar.jacoco.reportPath=target/jacoco.exec{% endif %}
-sonar.exclusions=**/domain/**,**/config/**,**/exception/**,**/{{project_name_combined}}Application.java
+sonar.exclusions=**/domain/**,**/config/**,**/repository/**,**/exception/**,**/{{project_name_combined}}Application.java

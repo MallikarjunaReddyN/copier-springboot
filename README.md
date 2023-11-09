@@ -150,7 +150,9 @@ Steps:
             class: nginx
   ```
 
-
+  ```
+  kubectl apply -f cluster-issuer.yaml
+  ```
 
 ### AKS Deployment with Azure Pipelines
 
@@ -170,9 +172,7 @@ Steps:
 
 - Create one more variable group to store DOMAIN variables for Ingress host.
   
-  In my case I created `Dev` for development, `QA` for testing and `Prod` for production. 
-  
-   
+  In my case I created `Dev` for development, `QA` for testing and `Prod` for production.  
 
 Reference links:
 

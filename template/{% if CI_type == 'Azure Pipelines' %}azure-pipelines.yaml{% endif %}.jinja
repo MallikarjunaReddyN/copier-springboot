@@ -132,4 +132,4 @@ stages:
                   $(Pipeline.Workspace)/k8s/service.yaml
                   $(Pipeline.Workspace)/k8s/ingress.yaml
                 containers: |
-                  {% if container_registery == "DockerHub" %}$(REGISTRY_USERNAME){% else %}##YOUR_CONTAINER_REGISTRY##{% endif %}/score-service:$(tag){% endif %}
+                  {% if container_registery == "DockerHub" %}$(REGISTRY_USERNAME){% else %}##YOUR_CONTAINER_REGISTRY##{% endif %}/{{ project_slug }}:$(tag){% endif %}

@@ -49,7 +49,7 @@ stages:
           testResultsFiles: '**/surefire-reports/TEST-*.xml'
           testRunTitle: 'Unit Tests'
           codeCoverageToolOption: 'JaCoCo'
-          classFilter: -:{{ group_id }}.{{ project_package }}.domain.*,-:{{ group_id }}.{{ project_package }}.config.*,-:{{ group_id }}.{{ project_package }}.repository.*,-:{{ group_id }}.{{ project_package }}.exception.*
+          classFilter: -:{{ group_id }}.{{ project_package }}.domain.*,-:{{ group_id }}.{{ project_package }}.config.*,{%if is_db_required == 'Yes' %}-:{{ group_id }}.{{ project_package }}.repository.*,{% endif %}-:{{ group_id }}.{{ project_package }}.exception.*
           javaHomeOption: 'JDKVersion'
           mavenVersionOption: 'Default'
           mavenAuthenticateFeed: false

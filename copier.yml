@@ -146,6 +146,7 @@ _message_before_copy: |
     generate a tailored project for you.
 
 _message_after_copy: |
+
     Your project "{{ project_name }}" has been created successfully!
 
     Next steps:

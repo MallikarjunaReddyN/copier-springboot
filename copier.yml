@@ -4,12 +4,6 @@ _subdirectory: "template"
 
 _answers_file: .copier-answers.yml
 
-_envops:
-    keep_trailing_newline: false
-
-_exclude:
-    - slugify
-
 group_id:
     type: str
     help: Enter Your group id

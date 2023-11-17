@@ -8,13 +8,13 @@ group_id:
     type: str
     help: Enter Your group id
     placeholder: org.springframework.boot
-    validator: "{% if not (group_id | regex_search('^[a-z][a-z\.]+$')) %}Please enter valid group id for your project{% endif %}"
+    validator: "{% if not (group_id | regex_search('^[a-z][a-z\\.]+$')) %}Please enter valid group id for your project{% endif %}"
 
 project_name:
     type: str
     help: Enter Your project name
     placeholder: Example Service
-    validator: "{% if not (project_name | regex_search('^[A-Za-z][A-Za-z\s]+$')) %}Please enter valid project name for your project{% endif %}"
+    validator: "{% if not (project_name | regex_search('^[A-Za-z][A-Za-z\\s]+$')) %}Please enter valid project name for your project{% endif %}"
 
 project_name_combined:
     type: str

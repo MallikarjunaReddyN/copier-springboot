@@ -74,11 +74,11 @@ This template aims at making it easier to configure spring boot projects with **
 
 - Configure below variables if **CI type** is **Azure Pipelines**:
   
-  - registery.username
+  - REGISTRY_USERNAME
   
-  - registery.password
+  - REGISTRY_PASSWORD
   
-  and create new service connection for sonarqube with name "sonarcloud"
+  and create new service connection for sonarqube/sonarcloud and update service connection name in azure-pipelines.yaml
 
 ### AKS Deployment with Github actions
 

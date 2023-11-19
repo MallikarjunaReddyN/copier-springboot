@@ -37,7 +37,7 @@ project_package:
 server_port:
     type: int
     help: Server port
-    default: {{ range(1000, 5000) | random }}
+    default: "{{ range(1000, 5000) | random }}"
     validator: "{% if not server_port %}Please enter port number for your project{% endif %}"
 
 version:

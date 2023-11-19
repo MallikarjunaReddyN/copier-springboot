@@ -35,9 +35,9 @@ project_package:
     validator: "{% if not project_package %}Please enter package for your project{% endif %}"
 
 server_port:
-    type: str
+    type: int
     help: Server port
-    default: "{{ range(1000, 5000) | random }}"
+    default: {{ range(1000, 5000) | random }}
     validator: "{% if not server_port %}Please enter port number for your project{% endif %}"
 
 version:

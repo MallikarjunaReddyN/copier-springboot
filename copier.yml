@@ -35,7 +35,6 @@ project_package:
     help: Package name
     default: "{% from 'slugify.jinja' import project_package %}{{ project_package(project_name) }}"
     validator: "{% if not project_package %}Please enter package for your project{% endif %}"
-    when: "{% if not project_name %}{% endif %}"
 
 server_port:
     type: int

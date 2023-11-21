@@ -82,21 +82,6 @@ entity:
     default: "{% from 'slugify.jinja' import get_entity_name %}{{ get_entity_name(project_name) }}"
     validator: "{% if not entity %}Please enter Entity name for your project{% endif %}"
 
-docker:
-    type: str
-    help: Do you want dockerize you project?
-    choices: 
-        - 'Yes'
-        - 'No'
-
-container_registery:
-    type: str
-    help: which container registery do you want to use?
-    when: "{{ docker == 'Yes' }}"
-    choices: 
-        - 'DockerHub'
-        - 'ACR'
-
 sca:
     type: str
     help: Do you want static code analysis for you project?
@@ -111,6 +96,21 @@ sca_type:
     choices:
         - 'SonarCloud'
         - 'SonarQube'
+        
+docker:
+    type: str
+    help: Do you want dockerize you project?
+    choices: 
+        - 'Yes'
+        - 'No'
+
+container_registery:
+    type: str
+    help: which container registery do you want to use?
+    when: "{{ docker == 'Yes' }}"
+    choices: 
+        - 'DockerHub'
+        - 'ACR'
 
 CI:
     type: str

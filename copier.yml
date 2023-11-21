@@ -96,7 +96,7 @@ sca_type:
     choices:
         - 'SonarCloud'
         - 'SonarQube'
-        
+
 docker:
     type: str
     help: Do you want dockerize you project?
@@ -158,5 +158,5 @@ _message_after_copy: |
     4. Visit http://localhost:{{ server_port }}/{{ project_slug }}/v1/swagger-ui
 
     {% if sca == 'Yes' %}Note: Please replace ##YOUR_ORGANIZATION## placeholder with your actaul organization in sonar-project.properties{% endif %}
-    {% if container_registery == 'ACR' %}Note: Please replace ##YOUR_CONTAINER_REGISTRY## placeholder with your actual container registery in pom.xml, {%if CI_type == 'Azure Pipelines' %}azure-pipelines.yaml{% endif %} and k8s/deployment.yaml{% endif %}
+    {% if container_registery == 'ACR' %}Note: Please replace ##YOUR_CONTAINER_REGISTRY## placeholder with your actual container registery in pom.xml{%if CI_type == 'Azure Pipelines' %}, azure-pipelines.yaml{% endif %} and k8s/deployment.yaml{% endif %}
     {% if container_registery == 'DockerHub' %}Note: Please replace ##REGISTERY_USERNAME## placeholder with your actual dockerhub username in pom.xml and k8s/deployment.yaml{% endif %}

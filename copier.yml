@@ -21,21 +21,21 @@ project_name_combined:
     help: Combined project name
     default: "{% from 'slugify.jinja' import project_name_combined %}{{ project_name_combined(project_name) }}"
     validator: "{% if not project_name_combined %}Please enter group id for your project{% endif %}"
-    when: "{{ if not project_name }}"
+    when: "{% if not project_name %}{% endif %}"
 
 project_slug:
     type: str
     help: A slug of the project name
     default: "{% from 'slugify.jinja' import slugify %}{{ slugify(project_name) }}"
     validator: "{% if not project_slug %}Please enter group id for your project{% endif %}"
-    when: "{{ if not project_name }}"
+    when: "{% if not project_name %}{% endif %}"
 
 project_package:
     type: str
     help: Package name
     default: "{% from 'slugify.jinja' import project_package %}{{ project_package(project_name) }}"
     validator: "{% if not project_package %}Please enter package for your project{% endif %}"
-    when: "{{ if not project_name }}"
+    when: "{% if not project_name %}{% endif %}"
 
 server_port:
     type: int

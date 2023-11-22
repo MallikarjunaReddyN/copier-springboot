@@ -136,7 +136,7 @@ jobs:
         id: install-kubectl
         uses: azure/setup-kubectl@v3
       {% if container_registery == "DockerHub" %}- name: Create ImagePullSecret
-        uses: Azure/k8s-create-secret@v1.1
+        uses: Azure/k8s-create-secret@v4
         with:
           container-registry-url: registry.hub.docker.com
           container-registry-username: {% raw %}${{ secrets.REGISTRY_USERNAME }}{% endraw %}

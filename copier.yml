@@ -137,7 +137,8 @@ aks:
 
 created_by:
     type: str
-    help: Enter the creator name of the project
+    help: Project creator name
+    placeholder: Enter the creator name of the project
 
 _message_before_copy: |
     Thanks for generating a project using our template.

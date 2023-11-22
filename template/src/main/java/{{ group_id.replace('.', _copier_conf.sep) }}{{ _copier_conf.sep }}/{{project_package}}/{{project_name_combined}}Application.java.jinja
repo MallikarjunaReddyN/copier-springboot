@@ -7,8 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "{{ project_name }}", description = "{{ project_description }}"))
-//@OpenAPIDefinition(info = @Info(title = "Music Service", description = "This is a Spring Boot Music Microservice"), security = @SecurityRequirement(name = "AUTHORIZATION"))
-//@SecurityScheme(name = "AUTHORIZATION", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
+/*@OpenAPIDefinition(info = @Info(title = "{{ project_name }}", description = "{{ project_description }}"),
+        security = @SecurityRequirement(name = "AUTHORIZATION"))
+@SecurityScheme(name = "AUTHORIZATION", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)*/
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class {{project_name_combined}}Application {
 

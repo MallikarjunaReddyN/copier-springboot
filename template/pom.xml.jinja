@@ -13,6 +13,11 @@
 	<version>{{ version }}</version>
 	<name>{{ project_name }}</name>
 	<description>{{ project_description }}</description>
+	<developers>
+		<developer>
+			<name>{{ created_by }}</name>
+		</developer>
+	</developers>
 	<properties>
 		<java.version>17</java.version>
 		<springdoc-openapi-ui>2.0.4</springdoc-openapi-ui>
@@ -122,8 +127,16 @@
             	<groupId>org.apache.maven.plugins</groupId>
             	<artifactId>maven-checkstyle-plugin</artifactId>
             	<version>3.3.0</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>10.12.5</version>
+					</dependency>
+				</dependencies>
             	<configuration>
                 	<configLocation>${basedir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
+					<consoleOutput>true</consoleOutput>
             	</configuration>
 				<executions>
         			<execution>

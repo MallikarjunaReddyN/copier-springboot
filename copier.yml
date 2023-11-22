@@ -135,6 +135,11 @@ aks:
         - 'Yes'
         - 'No'
 
+created_by:
+    type: str
+    help: Project creator name
+    placeholder: Enter the project creator name
+
 _message_before_copy: |
     Thanks for generating a project using our template.
 

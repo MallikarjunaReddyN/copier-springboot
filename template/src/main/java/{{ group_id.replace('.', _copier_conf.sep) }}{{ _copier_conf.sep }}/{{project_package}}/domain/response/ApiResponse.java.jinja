@@ -14,7 +14,7 @@ public class ApiResponse<T> {
     @JsonProperty("data")
     private T data;
 
-    public static <T> ApiResponse<T> ok( T data) {
+    public static <T> ApiResponse<T> ok(T data) {
         return new ApiResponse<>(Status.SUCCESS.getStatus(), "200", Status.SUCCESS.toString(), data);
     }
 

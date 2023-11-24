@@ -26,9 +26,7 @@ This template aims at making it easier to configure spring boot projects with **
 
 ****
 
-- Create a new project folder, for instance `example-service`.
-
-- Open your favourite terminal at newly created folder location.
+- Open your favourite terminal at location where you want create project.
 
 - Run below command:
   

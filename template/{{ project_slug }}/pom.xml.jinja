@@ -82,11 +82,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		{% if is_db_required == 'Yes' %}
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		{% endif %}
 	</dependencies>
 
 	<build>
@@ -127,13 +129,6 @@
             	<groupId>org.apache.maven.plugins</groupId>
             	<artifactId>maven-checkstyle-plugin</artifactId>
             	<version>3.3.0</version>
-				<dependencies>
-					<dependency>
-						<groupId>com.puppycrawl.tools</groupId>
-						<artifactId>checkstyle</artifactId>
-						<version>10.12.5</version>
-					</dependency>
-				</dependencies>
             	<configuration>
                 	<configLocation>${basedir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
 					<consoleOutput>true</consoleOutput>

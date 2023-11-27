@@ -162,9 +162,9 @@ _message_after_copy: |
 
        $ cd {{ _copier_conf.dst_path }}/{{ project_slug }}
 
-    2. Run "chmod 777 ./mvnw" (Only for MacOS and Linux)
+    2. Run "chmod 777 {% if project == 'Maven' %}./mvnw{% else %}./gradlew{% endif %}" (Only for MacOS and Linux)
 
-    3. Run "./mvnw spring-boot:run"
+    3. Run "{% if project == 'Maven' %}./mvnw spring-boot:run{% else %}./gradlew bootRun{% endif %}"
 
     4. Visit http://localhost:{{ server_port }}/{{ project_slug }}/v1/swagger-ui
 

@@ -1,8 +1,7 @@
 package {{ group_id }}.{{ project_package }}.service;
-{% if is_db_required == 'Yes' %}
-import {{ group_id }}.{{ project_package }}.repository.{{ entity }}Repository;
-import org.springframework.beans.factory.annotation.Autowired;
-{% endif %}
+
+{% if is_db_required == 'Yes' %}import {{ group_id }}.{{ project_package }}.repository.{{ entity }}Repository;
+import org.springframework.beans.factory.annotation.Autowired;{% endif %}
 import org.springframework.stereotype.Service;
 
 @Service

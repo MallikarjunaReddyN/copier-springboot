@@ -23,15 +23,17 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	{% if is_db_required %}
+	{% if is_db_required == 'Yes' %}
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	{% endif %}
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
 	compileOnly 'org.projectlombok:lombok'
-	{% if is_db_required %}
-	runtimeOnly 'com.mysql:mysql-connector-j'
+	{% if is_db_required == 'Yes' %}
+	{% if db == 'MySQL' %}runtimeOnly 'com.mysql:mysql-connector-j'{% endif %}
+	{% if db == 'PostgreSQL' %}runtimeOnly 'org.postgresql:postgresql'{% endif %}
 	runtimeOnly 'com.h2database:h2'
 	{% endif %}
 	annotationProcessor 'org.projectlombok:lombok'
@@ -72,7 +74,7 @@ jacocoTestReport {
 
 jib {
     from {
-        image = 'openjdk:17-alpine'
+        image = 'amazoncorretto:17.0.7-alpine'
     }
     to {
         image = '{% if container_registery == 'ACR' %}##YOUR_CONTAINER_REGISTRY##{% endif %}{% if container_registery == 'DockerHub' %}registry.hub.docker.com/##REGISTERY_USERNAME##{% endif %}/' + project.name

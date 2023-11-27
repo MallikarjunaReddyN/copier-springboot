@@ -23,10 +23,9 @@
 		<springdoc-openapi-ui>2.0.4</springdoc-openapi-ui>
 		{% if docker == 'Yes' %}
 		<docker.image.prefix>{% if container_registery == "DockerHub" %}registry.hub.docker.com{% else %}##YOUR_CONTAINER_REGISTRY##{% endif %}</docker.image.prefix>
-        <container.image>openjdk:17-alpine</container.image>
+        <container.image>amazoncorretto:17.0.7-alpine</container.image>
 		<jib-maven-plugin.version>3.3.0</jib-maven-plugin.version>
 		{% endif %}
-		<!--<git-commit-id-maven-plugin-version>6.0.0</git-commit-id-maven-plugin-version>-->
 	</properties>
 	<dependencies>
 		<dependency>
@@ -120,11 +119,6 @@
 				</configuration>
 			</plugin>
 			{% endif %}	
-			<!--<plugin>
-				<groupId>io.github.git-commit-id</groupId>
-				<artifactId>git-commit-id-maven-plugin</artifactId>
-				<version>${git-commit-id-maven-plugin-version}</version>
-			</plugin>-->
 			<plugin>
             	<groupId>org.apache.maven.plugins</groupId>
             	<artifactId>maven-checkstyle-plugin</artifactId>

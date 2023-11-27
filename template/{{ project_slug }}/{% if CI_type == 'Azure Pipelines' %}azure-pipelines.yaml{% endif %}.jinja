@@ -102,8 +102,7 @@ stages:
         inputs:
           pollingTimeoutSec: '300'{% endif %}{% endif %}
 
-      {% if docker == 'Yes' %}
-      {% if project == 'Maven' %}- task: Maven@4
+      {% if docker == 'Yes' %}{% if project == 'Maven' %}- task: Maven@4
         condition: or(variables.isDev, variables.isMain ,variables.isRelease)
         displayName: Docker Build & Push
         inputs:
@@ -115,8 +114,7 @@ stages:
         inputs:
           gradleWrapperFile: 'gradlew'
           tasks: 'jib -Djib.to.auth.username=$(REGISTRY_USERNAME) -Djib.to.auth.password=$(REGISTRY_PASSWORD) -Djib.to.tags=$(tag)'
-      {% endif %}
-      {% endif %}
+      {% endif %}{% endif %}
 
       {% if aks == 'Yes' %}- upload: k8s
         condition: or(variables.isDev, variables.isMain ,variables.isRelease)

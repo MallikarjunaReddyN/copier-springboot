@@ -7,7 +7,7 @@ trigger:
       - releases/*
 
 variables:
-  - group: registery-credentials
+  - group: registry-credentials
   - name: isDev
     value: $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
   - name: isMain
@@ -60,16 +60,16 @@ stages:
       {% if project == 'Gradle' %}- task: Gradle@3
         displayName: 'Test and Publish Test Results'
         inputs:
-        gradleWrapperFile: 'gradlew'
-        tasks: 'clean build'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml'
-        codeCoverageToolOption: 'JaCoCo'
-        codeCoverageClassFilesDirectories: 'build/classes/main/'
-        codeCoverageClassFilter: -:{{ group_id }}.{{ project_package }}.domain.*,-:{{ group_id }}.{{ project_package }}.config.*,{%if is_db_required == 'Yes' %}-:{{ group_id }}.{{ project_package }}.repository.*,{% endif %}-:{{ group_id }}.{{ project_package }}.exception.*
-        javaHomeOption: 'JDKVersion'
-        sonarQubeRunAnalysis: false
-        spotBugsAnalysis: false{% endif %}
+          gradleWrapperFile: 'gradlew'
+          tasks: 'clean build'
+          publishJUnitResults: true
+          testResultsFiles: '**/TEST-*.xml'
+          codeCoverageToolOption: 'JaCoCo'
+          codeCoverageClassFilesDirectories: 'build/classes/main/'
+          codeCoverageClassFilter: -:{{ group_id }}.{{ project_package }}.domain.*,-:{{ group_id }}.{{ project_package }}.config.*,{%if is_db_required == 'Yes' %}-:{{ group_id }}.{{ project_package }}.repository.*,{% endif %}-:{{ group_id }}.{{ project_package }}.exception.*
+          javaHomeOption: 'JDKVersion'
+          sonarQubeRunAnalysis: false
+          spotBugsAnalysis: false{% endif %}
 
       {% if sca == 'Yes' %}{% if sca_type == 'SonarQube' %}- task: SonarQubePrepare@5
         displayName: Sonar Scan
@@ -113,8 +113,8 @@ stages:
       {% if project == 'Gradle' %}- task: Gradle@3
         displayName: Docker Build & Push
         inputs:
-        gradleWrapperFile: 'gradlew'
-        tasks: 'jib -Djib.to.auth.username=$(REGISTRY_USERNAME) -Djib.to.auth.password=$(REGISTRY_PASSWORD) -Djib.to.tags=$(tag)'
+          gradleWrapperFile: 'gradlew'
+          tasks: 'jib -Djib.to.auth.username=$(REGISTRY_USERNAME) -Djib.to.auth.password=$(REGISTRY_PASSWORD) -Djib.to.tags=$(tag)'
       {% endif %}
       {% endif %}
 

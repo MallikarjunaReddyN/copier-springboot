@@ -67,8 +67,8 @@ is_db_required:
     type: str
     help: Do you want database for your project?
     choices: 
-        - 'Yes'
         - 'No'
+        - 'Yes'
 
 db: 
     type: str

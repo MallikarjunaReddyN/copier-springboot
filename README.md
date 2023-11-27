@@ -166,7 +166,7 @@ Steps:
 
 - Create sonarqube/snoarcloud service connection for sonar scan and update service connection name in Sonar Scan task.
 
-- Create variable group with name `registery-credentials` and add two variable in that variable group with REGISTERY_USERNAME, REGISTERY_PASSWORD
+- Create variable group with name `registry-credentials` and add two variable in that variable group with REGISTERY_USERNAME, REGISTERY_PASSWORD
 
 - Create one more variable group to store DOMAIN variables for Ingress host.
   

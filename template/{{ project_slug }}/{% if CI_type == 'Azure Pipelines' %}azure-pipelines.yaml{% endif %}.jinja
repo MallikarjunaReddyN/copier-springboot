@@ -66,7 +66,7 @@ stages:
         testResultsFiles: '**/TEST-*.xml'
         codeCoverageToolOption: 'JaCoCo'
         codeCoverageClassFilesDirectories: 'build/classes/main/'
-        codeCoverageClassFilter: -:{{ group_id }}.{{ project_package }}.domain.*,-:{{ group_id }}.{{ project_package }}.config.*,{%if is_db_required == ''Yes'' %}-:{{ group_id }}.{{ project_package }}.repository.*,{% endif %}-:{{ group_id }}.{{ project_package }}.exception.*
+        codeCoverageClassFilter: -:{{ group_id }}.{{ project_package }}.domain.*,-:{{ group_id }}.{{ project_package }}.config.*,{%if is_db_required == 'Yes' %}-:{{ group_id }}.{{ project_package }}.repository.*,{% endif %}-:{{ group_id }}.{{ project_package }}.exception.*
         javaHomeOption: 'JDKVersion'
         sonarQubeRunAnalysis: false
         spotBugsAnalysis: false{% endif %}

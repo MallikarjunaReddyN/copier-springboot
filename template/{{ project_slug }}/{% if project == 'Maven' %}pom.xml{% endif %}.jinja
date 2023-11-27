@@ -24,7 +24,7 @@
 		{% if docker == 'Yes' %}
 		<docker.image.prefix>{% if container_registery == "DockerHub" %}registry.hub.docker.com{% else %}##YOUR_CONTAINER_REGISTRY##{% endif %}</docker.image.prefix>
         <container.image>amazoncorretto:17.0.7-alpine</container.image>
-		<jib-maven-plugin.version>3.3.0</jib-maven-plugin.version>
+		<jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
 		{% endif %}
 	</properties>
 	<dependencies>

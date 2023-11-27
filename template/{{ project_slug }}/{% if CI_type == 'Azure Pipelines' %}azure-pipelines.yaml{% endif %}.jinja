@@ -15,7 +15,7 @@ variables:
   - name: isRelease
     value: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/release')]
   - name: tag
-    value: '$(Build.BuildId)'
+    value: '$(Build.BuildNumber)'
   - name: env
     {% raw %}${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:{% endraw %}
       value: Dev

@@ -114,7 +114,7 @@ stages:
         displayName: Docker Build & Push
         inputs:
         gradleWrapperFile: 'gradlew'
-        tasks: 'jib -Djib.to.auth.username=${{ secrets.REGISTRY_USERNAME }} -Djib.to.auth.password=${{ secrets.REGISTRY_PASSWORD }} -Djib.to.tags=${{ github.run_number }}'
+        tasks: 'jib -Djib.to.auth.username=$(REGISTRY_USERNAME) -Djib.to.auth.password=$(REGISTRY_PASSWORD) -Djib.to.tags=$(tag)'
       {% endif %}
       {% endif %}
 

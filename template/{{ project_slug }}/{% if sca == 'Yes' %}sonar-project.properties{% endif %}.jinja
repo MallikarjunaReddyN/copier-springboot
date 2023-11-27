@@ -2,6 +2,6 @@ sonar.organization=##YOUR_ORGANIZATION##
 sonar.projectKey=##YOUR_ORGANIZATION##_{{ project_slug }}
 sonar.sources=src/main/java/
 sonar.language=java
-sonar.java.binaries=target/classes
+sonar.java.binaries={% if project == 'Maven' %}target{% else %}build{% endif %}/classes
 {% if CI_type == 'Github Actions' %}sonar.jacoco.reportPath={% if project == 'Maven' %}target/jacoco.exec{% else %}build/jacoco/*.exec{% endif %}{% endif %}
 sonar.exclusions=**/domain/**,**/config/**,{%if is_db_required == 'Yes' %}**/repository/**,{% endif %}**/exception/**,**/{{project_name_combined}}Application.java

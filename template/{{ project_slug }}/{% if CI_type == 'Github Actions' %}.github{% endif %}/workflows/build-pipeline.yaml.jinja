@@ -38,7 +38,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'corretto'
-          cache: maven
+          {% if project == 'Maven' %}cache: maven{% endif %}
       - name: change permissions
         run: {% if project == 'Maven' %}chmod 777 ./mvnw{% endif %}{% if project == 'Gradle' %}chmod 777 ./gradlew{% endif %}
       - name: Generate reports
@@ -73,6 +73,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'corretto'
+        {% if project == 'Maven' %}cache: maven{% endif %}
     - name: change permissions
       run: {% if project == 'Maven' %}chmod 777 ./mvnw{% endif %}{% if project == 'Gradle' %}chmod 777 ./gradlew{% endif %}
     {% if docker == 'Yes' %}

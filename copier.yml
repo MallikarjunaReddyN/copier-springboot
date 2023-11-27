@@ -4,6 +4,9 @@ _subdirectory: "template"
 
 _answers_file: .copier-answers.yml
 
+_envops:
+    keep_trailing_newline: false
+
 project: 
     type: str
     help: Please choose project?

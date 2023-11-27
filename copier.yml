@@ -4,6 +4,12 @@ _subdirectory: "template"
 
 _answers_file: .copier-answers.yml
 
+project: 
+    type: str
+    help: Please choose project?
+    choices: 
+        - 'Maven'
+        - 'Gradle'
 group_id:
     type: str
     help: Enter Your group id

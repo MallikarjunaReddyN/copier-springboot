@@ -21,9 +21,11 @@ jobs:
       with:
         java-version: '17'
         distribution: 'corretto'
-        cache: maven
-    - name: Build with Maven
-      run: mvn compile test
+        {% if project == 'Maven' %}cache: maven{% endif %}
+    - name: change permissions
+      run: {% if project == 'Maven' %}chmod 777 ./mvnw{% endif %}{% if project == 'Gradle' %}chmod 777 ./gradlew{% endif %}
+    - name: Run Tests
+      run: {% if project == 'Maven' %}./mvnw compile test{% endif %}{% if project == 'Gradle' %}./gradlew clean test{% endif %}
 {% if sca == 'Yes' %}
   sonar:
     name: SonarCloud Scan
@@ -37,8 +39,10 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
           cache: maven
-      - name: Maven verify
-        run: mvn -B clean verify
+      - name: change permissions
+        run: {% if project == 'Maven' %}chmod 777 ./mvnw{% endif %}{% if project == 'Gradle' %}chmod 777 ./gradlew{% endif %}
+      - name: Generate reports
+        run: {% if project == 'Maven' %}./mvnw -B clean verify{% endif %}{% if project == 'Gradle' %}./gradlew clean build{% endif %}
       - name: SonarCloud Scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
@@ -69,10 +73,11 @@ jobs:
       with:
         java-version: '17'
         distribution: 'corretto'
-        cache: maven
+    - name: change permissions
+      run: {% if project == 'Maven' %}chmod 777 ./mvnw{% endif %}{% if project == 'Gradle' %}chmod 777 ./gradlew{% endif %}
     {% if docker == 'Yes' %}
     - name: Docker build & push
-      run: mvn clean package -DskipTests jib:build -Djib.to.auth.username={% raw %}${{ secrets.REGISTRY_USERNAME }}{% endraw %} -Djib.to.auth.password={% raw %}${{ secrets.REGISTRY_PASSWORD }}{% endraw %} -Djib.to.tags={% raw %}${{ github.run_number }}{% endraw %}
+      run: {% if project == 'Maven' %}./mvnw clean package -DskipTests jib:build{% endif %}{% if project == 'Gradle' %}./gradlew jib{% endif %} -Djib.to.auth.username={% raw %}${{ secrets.REGISTRY_USERNAME }}{% endraw %} -Djib.to.auth.password={% raw %}${{ secrets.REGISTRY_PASSWORD }}{% endraw %} -Djib.to.tags={% raw %}${{ github.run_number }}{% endraw %}
     {% else %}
     {% endif %}
     {% if aks == 'Yes' %}- name: Upload artifact

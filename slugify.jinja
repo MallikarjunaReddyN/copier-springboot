@@ -13,5 +13,5 @@
 {%- endmacro %}
 
 {% macro get_entity_name(value) -%}
-{{ value.split(' ')[0] }}
+{{ value.split(' ')[0]|capitalize }}
 {%- endmacro %}

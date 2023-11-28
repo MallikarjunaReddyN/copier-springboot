@@ -126,6 +126,9 @@ jobs:
           TAG: {% raw %}${{ github.run_number }}{% endraw %}
           REGISTRY_USERNAME: {% raw %}${{ secrets.DOCKER_USERNAME }}{% endraw %}
           DOMAIN: {% raw %}${{ vars.DOMAIN }}{% endraw %}
+          {% if is_db_required == 'Yes' %}DATABASE_URL: {% raw %}${{ vars.DATABASE_URL }}{% endraw %}
+          DATABASE_USERNAME: {% raw %}${{ vars.DATABASE_USERNAME }}{% endraw %}
+          DATABASE_PASSWORD: {% raw %}${{ secrets.DATABASE_PASSWORD }}{% endraw %}{% endif %}
       - name: Azure login
         id: login
         uses: azure/login@v1
@@ -153,6 +156,7 @@ jobs:
         with:
           namespace: {% raw %}'${{ vars.namespace }}'{% endraw %}
           manifests: |
+            {% if is_db_required == 'Yes' %}k8s/secrets.yaml{% endif %}
             k8s/deployment.yaml
             k8s/service.yaml
             k8s/ingress.yaml

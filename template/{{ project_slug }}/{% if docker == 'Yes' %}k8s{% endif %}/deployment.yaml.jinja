@@ -33,3 +33,19 @@ spec:
             periodSeconds: 10
           ports:
             - containerPort: {{ server_port }}
+          {% if is_db_required == 'Yes' %}env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ project_package }}-db-credentials
+                  key: database-url
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ project_package }}-db-credentials
+                  key: database-username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ project_package }}-db-credentials
+                  key: database-password{% endif %}

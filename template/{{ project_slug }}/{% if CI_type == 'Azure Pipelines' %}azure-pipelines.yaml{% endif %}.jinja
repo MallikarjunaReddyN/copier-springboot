@@ -126,7 +126,7 @@ stages:
     dependsOn: Build
     condition: and(succeeded(), or(variables.isDev, variables.isMain ,variables.isRelease))
     variables:
-    - group: {% raw %}${{variables.env}}{% endraw %}
+    - group: {% if is_db_required == 'Yes' %}DB_AND_{% endif %}DOMAIN_{% raw %}${{variables.env}}{% endraw %}
     jobs:
     - deployment: AKSDeploy
       displayName: AKS Deploy

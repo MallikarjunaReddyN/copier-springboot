@@ -4,7 +4,7 @@ plugins {
 	id 'jacoco'
 	id 'org.springframework.boot' version '3.2.0'
 	id 'io.spring.dependency-management' version '1.1.4'
-	id 'com.google.cloud.tools.jib' version '3.4.0'
+	{% if docker == 'Yes' %}id 'com.google.cloud.tools.jib' version '3.4.0'{% endif %}
 }
 
 group = '{{ group_id }}'
@@ -72,11 +72,11 @@ jacocoTestReport {
 	}
 }
 
-jib {
+{% if docker == 'Yes' %}jib {
     from {
         image = 'amazoncorretto:17.0.7-alpine'
     }
     to {
         image = '{% if container_registery == 'ACR' %}##YOUR_CONTAINER_REGISTRY##{% endif %}{% if container_registery == 'DockerHub' %}registry.hub.docker.com/##REGISTERY_USERNAME##{% endif %}/' + project.name
     }
-}
+}{% endif %}

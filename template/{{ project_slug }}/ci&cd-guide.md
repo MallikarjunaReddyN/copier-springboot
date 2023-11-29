@@ -22,13 +22,6 @@
 
             Org level: select orgnization ->s settings -> Secrets and variables -> Actions
 
-- Configure below variables if **CI type** is **Azure Pipelines**:
-  
-  - REGISTRY_USERNAME
-  
-  - REGISTRY_PASSWORD
-  
-  and create new service connection for sonarqube/sonarcloud and update service connection name in azure-pipelines.yaml
 
 ### AKS Deployment with Github actions
 
@@ -120,7 +113,7 @@ Steps:
 
 - Create variable group with name `registry-credentials` and add two variable in that variable group with REGISTERY_USERNAME, REGISTERY_PASSWORD
 
-- Create one more variable group to store DOMAIN variables for Ingress host.
+- Create variable group to store DOMAIN variables for Ingress host.
   
   In my case I created `Dev` for development, `QA` for testing and `Prod` for production.  
 

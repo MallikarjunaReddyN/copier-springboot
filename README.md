@@ -12,6 +12,8 @@ This template aims at making it easier to configure spring boot projects with **
 
 - **Python** - [Download Python | Python.org](https://www.python.org/downloads/)
 
+- **Git** - [Download Git](https://git-scm.com/downloads)
+
 - **copier** - [copier · PyPI](https://pypi.org/project/copier/3.1.0/)
 
 ##### For running generated project:
@@ -21,6 +23,24 @@ This template aims at making it easier to configure spring boot projects with **
 - Docker - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 - Intellij (Optional) - [IntelliJ IDEA – the Leading Java and Kotlin IDE](https://www.jetbrains.com/idea/)
+
+### Initial setup
+
+- Install python
+  
+- Append python scripts path to system path:
+  ```python scripts path -> C:\Users\<YOUR_USERNAME>\AppData\Local\Programs\Python\Python311\Scripts```
+  
+- Install copier using below command:
+  ```
+  pip install copier
+  ```
+- Enable Windows to accept file paths over 260 characters [link](https://www.howtogeek.com/266621/how-to-make-windows-10-accept-file-paths-over-260-characters/)
+
+- Run below git command to enable long path cloning
+  ```
+  git config --system core.longpaths true
+  ```
 
 ### Usage
 

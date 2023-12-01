@@ -25,7 +25,7 @@ jobs:
     - name: change permissions
       run: {% if project == 'Maven' %}chmod 777 ./mvnw{% endif %}{% if project == 'Gradle' %}chmod 777 ./gradlew{% endif %}
     - name: Test & Build
-      run: {% if project == 'Maven' %}./mvnw compile test{% endif %}{% if project == 'Gradle' %}./gradlew clean test{% endif %}
+      run: {% if project == 'Maven' %}./mvnw compile package{% endif %}{% if project == 'Gradle' %}./gradlew clean build{% endif %}
     {% if sca == 'Yes' %}- name: SonarCloud Scan
       uses: sonarsource/sonarqube-scan-action@master
       env:
@@ -39,7 +39,7 @@ jobs:
       timeout-minutes: 5
       env:
         SONAR_TOKEN: {% raw %}${{ secrets.SONAR_TOKEN }}{% endraw %}
-    - name: "SonarQube Quality Gate Status"
+    - name: SonarQube Quality Gate Status
       run: echo "The Quality Gate status is {% raw %}${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}{% endraw %}"{% endif %} 
     {% if docker == 'Yes' %}- {% if docker == 'Yes' %}name: Build, Publish & Docker push{% else %}name: Build & Publish{% endif %}
       run: {% if project == 'Maven' %}./mvnw clean package -DskipTests jib:build{% endif %}{% if project == 'Gradle' %}./gradlew jib{% endif %} -Djib.to.auth.username={% raw %}${{ secrets.REGISTRY_USERNAME }}{% endraw %} -Djib.to.auth.password={% raw %}${{ secrets.REGISTRY_PASSWORD }}{% endraw %} -Djib.to.tags={% raw %}${{ github.run_number }}{% endraw %}{% endif %}

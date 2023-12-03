@@ -19,7 +19,7 @@ spring.datasource.url=jdbc:postgresql://localhost:5432/{{ db_name }}?createDatab
 spring.datasource.username=postgres
 spring.datasource.password=postgres@123
 {% endif %}
-{% if db == 'PostgreSQL' | db == 'MySQL' %}
+{% if db == 'PostgreSQL' or db == 'MySQL' %}
 # ===============================
 # = JPA / HIBERNATE
 # ===============================

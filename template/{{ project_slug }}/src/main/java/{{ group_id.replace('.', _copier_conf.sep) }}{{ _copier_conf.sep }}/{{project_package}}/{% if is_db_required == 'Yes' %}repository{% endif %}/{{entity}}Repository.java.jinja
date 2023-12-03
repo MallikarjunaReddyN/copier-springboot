@@ -1,11 +1,11 @@
 package {{ group_id }}.{{ project_package }}.repository;
 
 import {{ group_id }}.{{ project_package }}.domain.entity.{{ entity }};
-{% if db == 'MySQL' | db == 'PostgreSQL' %}import org.springframework.data.jpa.repository.JpaRepository;{% endif %}
+{% if db == 'MySQL' or db == 'PostgreSQL' %}import org.springframework.data.jpa.repository.JpaRepository;{% endif %}
 {% if db == 'MongoDB' %}import org.springframework.data.mongodb.repository.MongoRepository;{% endif %}
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface {{ entity }}Repository extends {% if db == 'MySQL' | db == 'PostgreSQL' %}JpaRepository{% endif %}{% if db == 'MongoDB' %}MongoRepository{% endif %}<{{ entity }}, String> {
+public interface {{ entity }}Repository extends {% if db == 'MySQL' or db == 'PostgreSQL' %}JpaRepository{% endif %}{% if db == 'MongoDB' %}MongoRepository{% endif %}<{{ entity }}, String> {
 	
 }

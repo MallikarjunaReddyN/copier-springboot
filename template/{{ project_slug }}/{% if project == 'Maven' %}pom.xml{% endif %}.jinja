@@ -21,11 +21,10 @@
 	<properties>
 		<java.version>17</java.version>
 		<springdoc-openapi-ui>2.0.4</springdoc-openapi-ui>
-		{% if docker == 'Yes' %}
-		<docker.image.prefix>{% if container_registery == "DockerHub" %}registry.hub.docker.com{% else %}##YOUR_CONTAINER_REGISTRY##{% endif %}</docker.image.prefix>
+		{% if db == 'MongoDB' %}<embedded-mongo-version>4.11.0</embedded-mongo-version>{% endif %}
+		{% if docker == 'Yes' %}<docker.image.prefix>{% if container_registery == "DockerHub" %}registry.hub.docker.com{% else %}##YOUR_CONTAINER_REGISTRY##{% endif %}</docker.image.prefix>
         <container.image>amazoncorretto:17.0.7-alpine</container.image>
-		<jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
-		{% endif %}
+		<jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>{% endif %}
 	</properties>
 	<dependencies>
 		<dependency>
@@ -65,7 +64,12 @@
 		{% if db == 'MongoDB' %}<dependency>
       		<groupId>org.springframework.boot</groupId>
       		<artifactId>spring-boot-starter-data-mongodb</artifactId>
-    	</dependency>{% endif %}
+    	</dependency>
+		<dependency>
+			<groupId>de.flapdoodle.embed</groupId>
+			<artifactId>de.flapdoodle.embed.mongo.spring31x</artifactId>
+			<version>${embedded-mongo-version}</version>
+		</dependency>{% endif %}
 		<dependency>
       		<groupId>org.springframework.boot</groupId>
       		<artifactId>spring-boot-docker-compose</artifactId>

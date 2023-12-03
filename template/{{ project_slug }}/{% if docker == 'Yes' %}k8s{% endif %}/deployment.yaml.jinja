@@ -34,18 +34,18 @@ spec:
           ports:
             - containerPort: {{ server_port }}
           {% if is_db_required == 'Yes' %}env:
-            - name: DATABASE_URL
+            - name: {% if db == 'PostgreSQL' or db == 'MySQL' %}SPRING_DATASOURCE_URL{% endif %}{% if db == 'MongoDB' %}SPRING_DATA_MONGODB_URI{% endif %}
               valueFrom:
                 secretKeyRef:
                   name: {{ project_package }}-db-credentials
                   key: database-url
-            - name: DATABASE_USERNAME
+            {% if db == 'PostgreSQL' or db == 'MySQL' %}- name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: {{ project_package }}-db-credentials
                   key: database-username
-            - name: DATABASE_PASSWORD
+            - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ project_package }}-db-credentials
-                  key: database-password{% endif %}
+                  key: database-password{% endif %}{% endif %}

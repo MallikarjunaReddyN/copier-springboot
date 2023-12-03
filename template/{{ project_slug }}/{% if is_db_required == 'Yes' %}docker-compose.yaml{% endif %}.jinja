@@ -26,8 +26,7 @@ services:
   {% endif %}  
   {% if db == 'MongoDB' %}  
   mongodb:
-    image: mongo
-    container_name: mongodb
+    image: mongo:latest
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongo
       MONGO_INITDB_ROOT_PASSWORD: mongo123

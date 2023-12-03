@@ -2,7 +2,7 @@
 
 A [Copier](https://github.com/copier-org/copier) template for a Spring Boot projects.
 
-This template aims at making it easier to configure spring boot projects with **Java 17, checkstyle, databases (MySQL and PostgreSQL), docker, continous integration (Github Actions and Azure Pipelines), sonarqube, K8S manifests and AKS deployment**. 
+This template aims at making it easier to configure spring boot projects with **Java 17, checkstyle, databases (MySQL, PostgreSQL & MongoDB), docker, continous integration (Github Actions and Azure Pipelines), sonarqube, K8S manifests and AKS deployment**. 
 
 ### Prerequisites
 

@@ -9,6 +9,8 @@ services:
       - 'MYSQL_USER=mysql'
     ports:
       - "3306:3306"
+    volumes:
+      - {{project_package}}-dbdata:/var/lib/mysql
   {% endif %}  
   {% if db == 'PostgreSQL' %}  
   postgres:
@@ -19,4 +21,23 @@ services:
       - 'POSTGRES_USER=postgres'
     ports:
       - "5432:5432"
+    volumes:
+      - {{project_package}}-dbdata:/var/lib/postgresql/data
   {% endif %}  
+  {% if db == 'MongoDB' %}  
+  mongodb:
+    image: mongo:latest
+    environment:
+      - 'MONGO_INITDB_ROOT_USERNAME=mongo'
+      - 'MONGO_INITDB_ROOT_PASSWORD=mongo123'
+      - 'MONGO_INITDB_DATABASE={{ db_name }}'
+    ports:
+      - '27017:27017'
+    volumes:
+      - {{project_package}}-dbdata:/data/db
+  {% endif %} 
+
+
+volumes:
+  {{project_package}}-dbdata:
+    driver: local

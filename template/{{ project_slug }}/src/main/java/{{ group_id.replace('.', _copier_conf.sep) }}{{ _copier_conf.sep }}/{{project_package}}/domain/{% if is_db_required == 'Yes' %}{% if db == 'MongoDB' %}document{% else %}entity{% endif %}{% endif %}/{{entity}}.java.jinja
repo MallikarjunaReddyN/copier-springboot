@@ -1,0 +1,24 @@
+package {{ group_id }}.{{ project_package }}.domain.entity;
+
+{% if db == 'MySQL' or db == 'PostgreSQL' %}import jakarta.persistence.Id;{% endif %}
+{% if db == 'MongoDB' %}import org.springframework.data.annotation.Id;{% endif %}
+{% if db == 'MySQL' or db == 'PostgreSQL' %}import jakarta.persistence.Entity;
+import jakarta.persistence.Table;{% endif %}
+{% if db == 'MongoDB' %}import org.springframework.data.mongodb.core.mapping.Document;{% endif %}
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Builder
+{% if db == 'MySQL' or db == 'PostgreSQL' %}@Entity
+@Table(name = "{{ entity|lower }}"){% endif %}
+{% if db == 'MongoDB' %}@Document(collection = "{{ entity|lower }}"){% endif %}
+public class {{ entity }} {
+
+	@Id
+    private String id;
+	
+	private String name;
+}

@@ -74,6 +74,7 @@ db:
     choices:
         - 'MySQL'
         - 'PostgreSQL'
+        - 'MongoDB'
 
 db_name:
     type: str

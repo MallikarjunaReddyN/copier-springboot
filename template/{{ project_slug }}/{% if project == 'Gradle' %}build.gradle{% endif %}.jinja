@@ -38,7 +38,8 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'com.h2database:h2'
 	{%- endif %}
-	{%- if db == 'MongoDB' %}implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	{%- if db == 'MongoDB' %}
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring31x:4.11.0'
 	{%- endif %}
 	{%- endif %}

@@ -123,7 +123,9 @@ jobs:
         with:
           namespace: {% raw %}'${{ vars.namespace }}'{% endraw %}
           manifests: |
-            {%- if is_db_required == 'Yes' %}k8s/secrets.yaml{%- endif %}
+            {%- if is_db_required == 'Yes' %}
+            k8s/secrets.yaml
+            {%- endif %}
             k8s/deployment.yaml
             k8s/service.yaml
             k8s/ingress.yaml

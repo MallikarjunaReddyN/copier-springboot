@@ -99,12 +99,10 @@ stages:
           organization: 'mallikarjunareddyn'
           scannerMode: 'CLI'
           configMode: 'file'
-      
       - task: SonarCloudAnalyze@1
         displayName: Sonar Scan Analyze
         inputs:
           jdkversion: 'JAVA_HOME_17_X64'
-      
       - task: SonarCloudPublish@1
         displayName: Sonar Publish
         inputs:

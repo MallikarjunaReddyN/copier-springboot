@@ -4,6 +4,7 @@ spring.application.name={{ project_slug }}
 management.endpoint.health.probes.enabled=true
 management.health.livenesstate.enabled=true
 management.health.readinesstate.enabled=true
+
 {%- if is_db_required == 'Yes' %}
 # ===============================
 # = DATA SOURCE
@@ -39,6 +40,7 @@ spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialec
 {%- if db == 'MongoDB' %}
 spring.data.mongodb.uri=mongodb://mongo:mongo123@localhost:27017/{{ db_name }}
 {%- endif %}
+
 # Swagger config
 springdoc.api-docs.path=/api-docs
 springdoc.swagger-ui.path=/swagger-ui

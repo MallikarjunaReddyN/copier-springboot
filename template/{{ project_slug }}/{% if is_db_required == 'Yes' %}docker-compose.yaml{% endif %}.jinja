@@ -1,5 +1,5 @@
 services:
-  {% if db == 'MySQL' %}
+  {%- if db == 'MySQL' %}
   mysql:
     image: 'mysql:latest'
     environment:
@@ -11,8 +11,8 @@ services:
       - "3306:3306"
     volumes:
       - {{project_package}}-dbdata:/var/lib/mysql
-  {% endif %}  
-  {% if db == 'PostgreSQL' %}  
+  {%- endif %}  
+  {%- if db == 'PostgreSQL' %}  
   postgres:
     image: 'postgres:latest'
     environment:
@@ -23,8 +23,8 @@ services:
       - "5432:5432"
     volumes:
       - {{project_package}}-dbdata:/var/lib/postgresql/data
-  {% endif %}  
-  {% if db == 'MongoDB' %}  
+  {%- endif %}  
+  {%- if db == 'MongoDB' %}  
   mongodb:
     image: mongo:latest
     environment:
@@ -35,8 +35,7 @@ services:
       - '27017:27017'
     volumes:
       - {{project_package}}-dbdata:/data/db
-  {% endif %} 
-
+  {%- endif %} 
 
 volumes:
   {{project_package}}-dbdata:

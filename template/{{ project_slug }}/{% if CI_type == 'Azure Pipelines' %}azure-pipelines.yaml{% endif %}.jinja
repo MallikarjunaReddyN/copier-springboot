@@ -40,7 +40,8 @@ stages:
           jdkArchitectureOption: 'x64'
           jdkSourceOption: 'PreInstalled'
 
-     {% if project == 'Maven' %}- task: Maven@4
+     {%- if project == 'Maven' %}
+      - task: Maven@4
         displayName: 'Test and Publish Test Results'
         inputs:
           mavenPomFile: 'pom.xml'
@@ -55,9 +56,11 @@ stages:
           mavenAuthenticateFeed: false
           effectivePomSkip: false
           sonarQubeRunAnalysis: false
-          sqMavenPluginVersionChoice: 'latest'{% endif %}
+          sqMavenPluginVersionChoice: 'latest'
+      {%- endif %}
 
-      {% if project == 'Gradle' %}- task: Gradle@3
+      {%- if project == 'Gradle' %}
+      - task: Gradle@3
         displayName: 'Test and Publish Test Results'
         inputs:
           gradleWrapperFile: 'gradlew'
@@ -69,9 +72,12 @@ stages:
           #codeCoverageClassFilter: -:{{ group_id }}.{{ project_package }}.domain.*,-:{{ group_id }}.{{ project_package }}.config.*,{%if is_db_required == 'Yes' %}-:{{ group_id }}.{{ project_package }}.repository.*,{% endif %}-:{{ group_id }}.{{ project_package }}.exception.*
           javaHomeOption: 'JDKVersion'
           sonarQubeRunAnalysis: false
-          spotBugsAnalysis: false{% endif %}
+          spotBugsAnalysis: false
+      {%- endif %}
 
-      {% if sca == 'Yes' %}{% if sca_type == 'SonarQube' %}- task: SonarQubePrepare@5
+      {%- if sca == 'Yes' %}
+      {%- if sca_type == 'SonarQube' %}
+      - task: SonarQubePrepare@5
         displayName: Sonar Scan
         inputs:
           SonarQube: 'sonarqube' # 'sonarqube' is service connection name
@@ -83,8 +89,10 @@ stages:
       - task: SonarQubePublish@5
         displayName: Sonar Publish
         inputs:
-          pollingTimeoutSec: '300'{% endif %}
-      {% if sca_type == 'SonarCloud' %}- task: SonarCloudPrepare@1
+          pollingTimeoutSec: '300'
+      {%- endif %}
+      {%- if sca_type == 'SonarCloud' %}
+      - task: SonarCloudPrepare@1
         displayName: Sonar Scan Prepare
         inputs:
           SonarCloud: 'sonarcloud' # 'sonarcloud' is service connection name
@@ -100,23 +108,30 @@ stages:
       - task: SonarCloudPublish@1
         displayName: Sonar Publish
         inputs:
-          pollingTimeoutSec: '300'{% endif %}{% endif %}
+          pollingTimeoutSec: '300'
+      {%- endif %}
+      {%- endif %}
 
-      {% if docker == 'Yes' %}{% if project == 'Maven' %}- task: Maven@4
+      {%- if docker == 'Yes' %}
+      {%- if project == 'Maven' %}
+      - task: Maven@4
         condition: or(variables.isDev, variables.isMain ,variables.isRelease)
         displayName: Docker Build & Push
         inputs:
           mavenPomFile: 'pom.xml'
           goals: 'clean package -DskipTests jib:build -Djib.to.auth.username=$(REGISTRY_USERNAME) -Djib.to.auth.password=$(REGISTRY_PASSWORD) -Djib.to.tags=$(tag)'
-      {% endif %}
-      {% if project == 'Gradle' %}- task: Gradle@3
+      {%- endif %}
+      {%- if project == 'Gradle' %}
+      - task: Gradle@3
         displayName: Docker Build & Push
         inputs:
           gradleWrapperFile: 'gradlew'
           tasks: 'jib -Djib.to.auth.username=$(REGISTRY_USERNAME) -Djib.to.auth.password=$(REGISTRY_PASSWORD) -Djib.to.tags=$(tag)'
-      {% endif %}{% endif %}
+      {%- endif %}
+      {%- endif %}
 
-      {% if aks == 'Yes' %}- upload: k8s
+      {%- if aks == 'Yes' %}
+      - upload: k8s
         condition: or(variables.isDev, variables.isMain ,variables.isRelease)
         displayName: Upload k8s manifests
         artifact: k8s
@@ -153,4 +168,5 @@ stages:
                   $(Pipeline.Workspace)/k8s/service.yaml
                   $(Pipeline.Workspace)/k8s/ingress.yaml
                 containers: |
-                  {% if container_registery == "DockerHub" %}$(REGISTRY_USERNAME){% else %}##YOUR_CONTAINER_REGISTRY##{% endif %}/{{ project_slug }}:$(tag){% endif %}
+                  {% if container_registery == "DockerHub" %}$(REGISTRY_USERNAME){% else %}##YOUR_CONTAINER_REGISTRY##{% endif %}/{{ project_slug }}:$(tag)
+        {%- endif %}

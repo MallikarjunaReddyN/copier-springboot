@@ -33,13 +33,15 @@ spec:
             periodSeconds: 10
           ports:
             - containerPort: {{ server_port }}
-          {% if is_db_required == 'Yes' %}env:
+          {%- if is_db_required == 'Yes' %}
+          env:
             - name: {% if db == 'PostgreSQL' or db == 'MySQL' %}SPRING_DATASOURCE_URL{% endif %}{% if db == 'MongoDB' %}SPRING_DATA_MONGODB_URI{% endif %}
               valueFrom:
                 secretKeyRef:
                   name: {{ project_package }}-db-credentials
                   key: database-url
-            {% if db == 'PostgreSQL' or db == 'MySQL' %}- name: SPRING_DATASOURCE_USERNAME
+            {%- if db == 'PostgreSQL' or db == 'MySQL' %}
+            - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: {{ project_package }}-db-credentials
@@ -48,4 +50,6 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ project_package }}-db-credentials
-                  key: database-password{% endif %}{% endif %}
+                  key: database-password
+            {%- endif %}
+          {%- endif %}

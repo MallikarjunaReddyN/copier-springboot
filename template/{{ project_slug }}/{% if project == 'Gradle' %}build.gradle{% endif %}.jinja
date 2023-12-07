@@ -26,21 +26,22 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
-	{% if is_db_required == 'Yes' %}
+	{%- if is_db_required == 'Yes' %}
 	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
-	{% if db == 'MySQL' %}
+	{%- if db == 'MySQL' %}
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	runtimeOnly 'com.h2database:h2'
-	{% endif %}
-	{% if db == 'PostgreSQL' %}
+	{%- endif %}
+	{%- if db == 'PostgreSQL' %}
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'com.h2database:h2'
-	{% endif %}
-	{% if db == 'MongoDB' %}implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-	implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring31x:4.11.0'{% endif %}
-	{% endif %}
+	{%- endif %}
+	{%- if db == 'MongoDB' %}implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring31x:4.11.0'
+	{%- endif %}
+	{%- endif %}
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -78,11 +79,13 @@ jacocoTestReport {
 	}
 }
 
-{% if docker == 'Yes' %}jib {
+{%- if docker == 'Yes' %}
+jib {
     from {
         image = 'amazoncorretto:17.0.7-alpine'
     }
     to {
         image = '{% if container_registery == 'ACR' %}##YOUR_CONTAINER_REGISTRY##{% endif %}{% if container_registery == 'DockerHub' %}registry.hub.docker.com/##REGISTERY_USERNAME##{% endif %}/' + project.name
     }
-}{% endif %}
+}
+{%- endif %}

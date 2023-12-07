@@ -27,11 +27,18 @@ spring.datasource.password=postgres@123
 spring.jpa.show-sql=true
 # Hibernate ddl auto (create, create-drop, update, validate)
 spring.jpa.hibernate.ddl-auto=update
-# Allows Hibernate to generate SQL optimized for a particular DBMS{%- endif %}
-{%- if db == 'MySQL' %}spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect{%- endif %}
-{%- if db == 'PostgreSQL' %}spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect{%- endif %}
+# Allows Hibernate to generate SQL optimized for a particular DBMS
 {%- endif %}
-{%- if db == 'MongoDB' %}spring.data.mongodb.uri=mongodb://mongo:mongo123@localhost:27017/{{ db_name }}{%- endif %}
+{%- if db == 'MySQL' %}
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+{%- endif %}
+{%- if db == 'PostgreSQL' %}
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+{%- endif %}
+{%- endif %}
+{%- if db == 'MongoDB' %}
+spring.data.mongodb.uri=mongodb://mongo:mongo123@localhost:27017/{{ db_name }}
+{%- endif %}
 # Swagger config
 springdoc.api-docs.path=/api-docs
 springdoc.swagger-ui.path=/swagger-ui

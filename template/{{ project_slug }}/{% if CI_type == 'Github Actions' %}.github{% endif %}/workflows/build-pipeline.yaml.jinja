@@ -26,7 +26,8 @@ jobs:
       run: {% if project == 'Maven' %}chmod 777 ./mvnw{% endif %}{% if project == 'Gradle' %}chmod 777 ./gradlew{% endif %}
     - name: Test & Build
       run: {% if project == 'Maven' %}./mvnw compile package{% endif %}{% if project == 'Gradle' %}./gradlew clean build{% endif %}
-    {% if sca == 'Yes' %}- name: SonarCloud Scan
+    {%- if sca == 'Yes' %}
+    - name: SonarCloud Scan
       uses: sonarsource/sonarqube-scan-action@master
       env:
         GITHUB_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
@@ -42,8 +43,10 @@ jobs:
     - name: SonarQube Quality Gate Status
       run: echo "The Quality Gate status is {% raw %}${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}{% endraw %}"{% endif %} 
     {% if docker == 'Yes' %}- {% if docker == 'Yes' %}name: Build, Publish & Docker push{% else %}name: Build & Publish{% endif %}
-      run: {% if project == 'Maven' %}./mvnw clean package -DskipTests jib:build{% endif %}{% if project == 'Gradle' %}./gradlew jib{% endif %} -Djib.to.auth.username={% raw %}${{ secrets.REGISTRY_USERNAME }}{% endraw %} -Djib.to.auth.password={% raw %}${{ secrets.REGISTRY_PASSWORD }}{% endraw %} -Djib.to.tags={% raw %}${{ github.run_number }}{% endraw %}{% endif %}
-    {% if aks == 'Yes' %}- name: Upload artifact
+      run: {% if project == 'Maven' %}./mvnw clean package -DskipTests jib:build{% endif %}{% if project == 'Gradle' %}./gradlew jib{% endif %} -Djib.to.auth.username={% raw %}${{ secrets.REGISTRY_USERNAME }}{% endraw %} -Djib.to.auth.password={% raw %}${{ secrets.REGISTRY_PASSWORD }}{% endraw %} -Djib.to.tags={% raw %}${{ github.run_number }}{% endraw %}
+    {%- endif %}
+    {%- if aks == 'Yes' %}
+    - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: k8s-manifests
@@ -105,22 +108,27 @@ jobs:
       - name: Setup kubectl
         id: install-kubectl
         uses: azure/setup-kubectl@v3
-      {% if container_registery == "DockerHub" %}- name: Create ImagePullSecret
+      {%- if container_registery == "DockerHub" %}
+      - name: Create ImagePullSecret
         uses: Azure/k8s-create-secret@v4
         with:
           container-registry-url: registry.hub.docker.com
           container-registry-username: {% raw %}${{ secrets.REGISTRY_USERNAME }}{% endraw %}
           container-registry-password: {% raw %}${{ secrets.REGISTRY_PASSWORD }}{% endraw %}
-          secret-name: image-pull-secret{% endif %}
+          secret-name: image-pull-secret
+      {%- endif %}
       - name: Deploy to AKS
         id: deploy-aks
         uses: Azure/k8s-deploy@v4
         with:
           namespace: {% raw %}'${{ vars.namespace }}'{% endraw %}
           manifests: |
-            {% if is_db_required == 'Yes' %}k8s/secrets.yaml{% endif %}
+            {%- if is_db_required == 'Yes' %}k8s/secrets.yaml{%- endif %}
             k8s/deployment.yaml
             k8s/service.yaml
             k8s/ingress.yaml
-          {% if container_registery == "DockerHub" %}imagepullsecrets: |
-            image-pull-secret{% endif %}{% endif %}
+          {%- if container_registery == "DockerHub" %}
+          imagepullsecrets: |
+            image-pull-secret
+          {%- endif %}
+      {%- endif %}

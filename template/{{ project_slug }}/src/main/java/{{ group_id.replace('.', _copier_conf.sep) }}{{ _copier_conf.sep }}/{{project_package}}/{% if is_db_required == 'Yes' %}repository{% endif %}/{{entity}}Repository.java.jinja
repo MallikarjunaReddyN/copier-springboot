@@ -1,8 +1,8 @@
 package {{ group_id }}.{{ project_package }}.repository;
 
 import {{ group_id }}.{{ project_package }}.domain.entity.{{ entity }};
-{% if db == 'MySQL' or db == 'PostgreSQL' %}import org.springframework.data.jpa.repository.JpaRepository;{% endif %}
-{% if db == 'MongoDB' %}import org.springframework.data.mongodb.repository.MongoRepository;{% endif %}
+{%- if db == 'MySQL' or db == 'PostgreSQL' %}import org.springframework.data.jpa.repository.JpaRepository;{%- endif %}
+{%- if db == 'MongoDB' %}import org.springframework.data.mongodb.repository.MongoRepository;{%- endif %}
 import org.springframework.stereotype.Repository;
 
 @Repository

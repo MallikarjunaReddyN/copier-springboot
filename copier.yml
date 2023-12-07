@@ -25,21 +25,21 @@ project_name:
 project_name_combined:
     type: str
     help: Combined project name
-    default: "{% from 'slugify.jinja' import project_name_combined %}{{ project_name_combined(project_name) }}"
+    default: "{% from 'macros.jinja' import project_name_combined %}{{ project_name_combined(project_name) }}"
     validator: "{% if not project_name_combined %}Please enter group id for your project{% endif %}"
     when: "{% if not project_name %}{% endif %}"
 
 project_slug:
     type: str
     help: A slug of the project name
-    default: "{% from 'slugify.jinja' import slugify %}{{ slugify(project_name) }}"
+    default: "{% from 'macros.jinja' import slugify %}{{ slugify(project_name) }}"
     validator: "{% if not project_slug %}Please enter group id for your project{% endif %}"
     when: "{% if not project_name %}{% endif %}"
 
 project_package:
     type: str
     help: Package name
-    default: "{% from 'slugify.jinja' import project_package %}{{ project_package(project_name) }}"
+    default: "{% from 'macros.jinja' import project_package %}{{ project_package(project_name) }}"
     validator: "{% if not project_package %}Please enter package for your project{% endif %}"
 
 server_port:
@@ -57,7 +57,7 @@ version:
 project_description:
     type: str
     help: Enter Your project description
-    default: "This is a Spring Boot {% from 'slugify.jinja' import get_entity_name %}{{ get_entity_name(project_name) }} Microservice"
+    default: "This is a Spring Boot {% from 'macros.jinja' import get_entity_name %}{{ get_entity_name(project_name) }} Microservice"
     validator: "{% if not project_description %}Please enter project description for your project{% endif %}"
 
 is_db_required:
@@ -86,7 +86,7 @@ db_name:
 entity:
     type: str
     help: Enter Your entity name
-    default: "{% from 'slugify.jinja' import get_entity_name %}{{ get_entity_name(project_name) }}"
+    default: "{% from 'macros.jinja' import get_entity_name %}{{ get_entity_name(project_name) }}"
     validator: "{% if not entity %}Please enter Entity name for your project{% endif %}"
 
 sca:
@@ -113,7 +113,7 @@ docker:
 
 container_registery:
     type: str
-    help: which container registery do you want to use?
+    help: which container registry do you want to use?
     when: "{{ docker == 'Yes' }}"
     choices: 
         - 'DockerHub'

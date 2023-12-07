@@ -162,6 +162,9 @@ stages:
               inputs:
                 action: deploy
                 manifests: |
+                  {%- if is_db_required == 'Yes' %}
+                  $(Pipeline.Workspace)k8s/secrets.yaml
+                  {%- endif %}
                   $(Pipeline.Workspace)/k8s/deployment.yaml
                   $(Pipeline.Workspace)/k8s/service.yaml
                   $(Pipeline.Workspace)/k8s/ingress.yaml

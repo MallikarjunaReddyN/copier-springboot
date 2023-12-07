@@ -1,5 +1,4 @@
 package {{ group_id }}.{{ project_package }}.domain.entity;
-
 {%+ if db == 'MySQL' or db == 'PostgreSQL' %}
 import jakarta.persistence.Id;
 {%- endif %}
@@ -31,6 +30,5 @@ public class {{ entity }} {
 
 	@Id
     private String id;
-	
 	private String name;
 }

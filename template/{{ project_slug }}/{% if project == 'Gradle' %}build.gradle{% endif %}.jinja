@@ -9,7 +9,7 @@ plugins {
 
 group = '{{ group_id }}'
 version = '{{ version }}'
-sourceCompatibility = '17'
+sourceCompatibility = '21'
 
 configurations {
 	compileOnly {
@@ -83,7 +83,7 @@ jacocoTestReport {
 {%- if docker == 'Yes' %}
 jib {
     from {
-        image = 'amazoncorretto:17.0.7-alpine'
+        image = 'amazoncorretto:21-alpine'
     }
     to {
         image = '{% if container_registery == 'ACR' %}##YOUR_CONTAINER_REGISTRY##{% endif %}{% if container_registery == 'DockerHub' %}registry.hub.docker.com/##REGISTERY_USERNAME##{% endif %}/' + project.name

@@ -34,9 +34,9 @@ stages:
         vmImage: 'ubuntu-latest'
       steps:
       - task: JavaToolInstaller@0
-        displayName: 'Installing Java 17'
+        displayName: 'Installing Java 21'
         inputs:
-          versionSpec: '17'
+          versionSpec: '21'
           jdkArchitectureOption: 'x64'
           jdkSourceOption: 'PreInstalled'
 
@@ -85,7 +85,7 @@ stages:
           configMode: 'file'
       - task: SonarQubeAnalyze@5
         inputs:
-          jdkversion: 'JAVA_HOME_17_X64'
+          jdkversion: 'JAVA_HOME_21_X64'
       - task: SonarQubePublish@5
         displayName: Sonar Publish
         inputs:
@@ -102,7 +102,7 @@ stages:
       - task: SonarCloudAnalyze@1
         displayName: Sonar Scan Analyze
         inputs:
-          jdkversion: 'JAVA_HOME_17_X64'
+          jdkversion: 'JAVA_HOME_21_X64'
       - task: SonarCloudPublish@1
         displayName: Sonar Publish
         inputs:

@@ -173,3 +173,4 @@ _message_after_copy: |
     {% if sca == 'Yes' %}Note: Please replace ##YOUR_ORGANIZATION## placeholder with your actaul organization in sonar-project.properties{% endif %}
     {% if container_registery == 'ACR' %}Note: Please replace ##YOUR_CONTAINER_REGISTRY## placeholder with your actual container registery in pom.xml{%if CI_type == 'Azure Pipelines' %}, azure-pipelines.yaml{% endif %} and k8s/deployment.yaml{% endif %}
     {% if container_registery == 'DockerHub' %}Note: Please replace ##REGISTERY_USERNAME## placeholder with your actual dockerhub username in pom.xml and k8s/deployment.yaml{% endif %}
+    {% if CI_type == 'Jenkins' && aks == 'Yes' %}Note: Please replace ##DEV-CONTEXT_NAME##, ##QA-CONTEXT_NAME##, ##PROD-CONTEXT_NAME## and ##NAMESPACE placeholder with your actual context names and namespace in Jenkinsfile{% endif %}

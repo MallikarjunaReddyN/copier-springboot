@@ -133,6 +133,7 @@ CI_type:
     choices:
         - 'Github Actions'
         - 'Azure Pipelines'
+        - 'Jenkins'
 
 aks:
     type: str

@@ -1,0 +1,128 @@
+pipeline {
+    agent any
+
+    environment {
+        {%- if aks == 'Yes' %}
+        ENV_NAME = getEnvName(env.BRANCH_NAME)
+        {%- endif %} 
+        GIT_SHA_SHORT = GIT_COMMIT.take(7)
+        {%- if sca == 'Yes' %}
+        scannerHome = tool 'Sonar Scanner'
+        {%- endif %} 
+    }
+
+    stages {
+        stage('Commit{% if aks == 'Yes' %}, Branch & Environment{% else %}and Branch{%- endif %}  Info') {
+            steps {
+                echo "pulling .. " + env.BRANCH_NAME
+                {%- if aks == 'Yes' %}
+                echo "Environment is : "+ env.ENV_NAME
+                {%- endif %} 
+                echo "Commit id : " + env.GIT_COMMIT
+                echo "Short commit id: " + env.GIT_SHA_SHORT
+            }
+        }
+
+        stage('Test & Build') {
+            steps {
+                sh "{% if project == 'Maven' %}chmod 777 ./mvnw{% endif %}{% if project == 'Gradle' %}chmod 777 ./gradlew{% endif %}"
+                sh "{% if project == 'Maven' %}./mvnw clean package{% endif %}{% if project == 'Gradle' %}./gradlew clean build{% endif %}"
+            }
+        }
+        {%+ if sca == 'Yes' %}
+        stage("SonarQube analysis") {
+            steps {
+                withSonarQubeEnv('sonarcloud') {
+                    sh '${scannerHome}/bin/sonar-scanner'
+                }
+            }
+        }
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        {%- endif %} 
+        {% if docker == 'Yes' %}
+        stage('Docker Build & Push') {
+            when {
+                expression {
+                    return env.ENV_NAME != 'null';
+                }
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'registry-credentials',
+                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    script {
+                        sh "{% if project == 'Maven' %}chmod 777 ./mvnw{% endif %}{% if project == 'Gradle' %}chmod 777 ./gradlew{% endif %}"
+                        sh "{% if project == 'Maven' %}./mvnw jib:build{% endif %}{% if project == 'Gradle' %}./gradlew jib{% endif %} -Djib.to.auth.username=$USERNAME -Djib.to.auth.password=$PASSWORD -Djib.to.tags=${GIT_SHA_SHORT}"
+                    }
+                }
+            }
+        }
+        {%- endif %} 
+        {%- if aks == 'Yes' %}
+        stage('Update Image tag') {
+            when {
+                expression {
+                    return env.ENV_NAME != 'null';
+                }
+            }
+            steps {
+                dir("${env.WORKSPACE}/k8s") {
+                    sh "sed -ie 's/##TAG##/${GIT_SHA_SHORT}/g' deployment.yaml"
+                    sh "cat deployment.yaml"
+                }
+
+            }
+        }
+
+        stage('K8S Deploy') {
+            when {
+                expression {
+                    return env.ENV_NAME != 'null';
+                }
+            }
+            environment {
+                CONTEXT = getContext(env.BRANCH_NAME)
+            }
+            steps {
+                script {
+                    dir("${env.WORKSPACE}/k8s") {
+                        echo "Context .. " + env.CONTEXT
+                        sh "/Users/mdireddy/.jenkins/kubectl config use-context ${env.CONTEXT}"
+                        sh "/Users/mdireddy/.jenkins/kubectl apply -f . -n default"
+                        //kubernetesDeploy(configs: "deployment.yaml", "service.yaml")
+                    }
+                }
+            }
+        }
+    }
+}
+
+def getEnvName(branchName) {
+    if (branchName.equals("dev")) {
+        return "dev";
+    } else if (branchName.equals("main")) {
+        return "qa";
+    } else if (branchName.startsWith("releases/release")) {
+        return "prod";
+    } else {
+        return null;
+    }
+}
+
+def getContext(branchName) {
+    if (branchName.equals("dev")) {
+        return "minikube";
+    } else if (branchName.equals("main")) {
+        return "minikube";
+    } else if (branchName.startsWith("releases/release")) {
+        return "minikube";
+    } else {
+        return null;
+    }
+}
+{%- endif %}

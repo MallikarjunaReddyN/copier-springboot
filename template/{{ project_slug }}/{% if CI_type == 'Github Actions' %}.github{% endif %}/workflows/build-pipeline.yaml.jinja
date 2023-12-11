@@ -25,7 +25,7 @@ jobs:
     - name: change permissions
       run: {% if project == 'Maven' %}chmod 777 ./mvnw{% endif %}{% if project == 'Gradle' %}chmod 777 ./gradlew{% endif %}
     - name: Test & Build
-      run: {% if project == 'Maven' %}./mvnw compile package{% endif %}{% if project == 'Gradle' %}./gradlew clean build{% endif %}
+      run: {% if project == 'Maven' %}./mvnw clean package{% endif %}{% if project == 'Gradle' %}./gradlew clean build{% endif %}
     {%- if sca == 'Yes' %}
     - name: SonarCloud Scan
       uses: sonarsource/sonarqube-scan-action@master

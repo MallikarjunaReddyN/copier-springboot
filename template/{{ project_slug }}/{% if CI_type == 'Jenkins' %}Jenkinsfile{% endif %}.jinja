@@ -92,9 +92,8 @@ pipeline {
                 script {
                     dir("${env.WORKSPACE}/k8s") {
                         echo "Context .. " + env.CONTEXT
-                        sh "/Users/mdireddy/.jenkins/kubectl config use-context ${env.CONTEXT}"
-                        sh "/Users/mdireddy/.jenkins/kubectl apply -f . -n default"
-                        //kubernetesDeploy(configs: "deployment.yaml", "service.yaml")
+                        sh "##KUBECTL-PATH## config use-context ${env.CONTEXT}"
+                        sh "##KUBECTL-PATH## apply -f . -n ##NAMESPACE##"
                     }
                 }
             }
@@ -116,11 +115,11 @@ def getEnvName(branchName) {
 
 def getContext(branchName) {
     if (branchName.equals("dev")) {
-        return "minikube";
+        return "##DEV-CONTEXT_NAME##";
     } else if (branchName.equals("main")) {
-        return "minikube";
+        return "##QA-CONTEXT_NAME##";
     } else if (branchName.startsWith("releases/release")) {
-        return "minikube";
+        return "##PROD-CONTEXT_NAME##";
     } else {
         return null;
     }

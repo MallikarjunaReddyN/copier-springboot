@@ -117,6 +117,25 @@ Steps:
   
   In my case I created `Dev` for development, `QA` for testing and `Prod` for production.  
 
+
+### CI CD with Jenkins
+
+****
+##### Prerequisites
+  - Kubectl
+  - Kubernates cluster
+
+Steps:
+
+- Add new Username and password credentials with ID `registry-credentials` for container registry.
+
+- Add sonarQube server and Sonar scanner.
+
+- Create new multi-branch pipeline
+
+- add webhook for automatic build triggers.
+
+
 Reference links:
 
 - [Build, test, and deploy containers to Azure Kubernetes Service (AKS) using GitHub Actions - Azure Kubernetes Service | Microsoft Learn](https://learn.microsoft.com/en-us/azure/aks/kubernetes-action)

@@ -22,10 +22,11 @@ pipeline {
                 echo "Short commit id: " + env.GIT_SHA_SHORT
             }
         }
+
         stage('Test & Build') {
             steps {
                 sh "{% if project == 'Maven' %}chmod 777 ./mvnw{% endif %}{% if project == 'Gradle' %}chmod 777 ./gradlew{% endif %}"
-                sh "{% if project == 'Maven' %}./mvnw compile package{% endif %}{% if project == 'Gradle' %}./gradlew clean build{% endif %}"
+                sh "{% if project == 'Maven' %}./mvnw clean package{% endif %}{% if project == 'Gradle' %}./gradlew clean build{% endif %}"
             }
         }
         {%+ if sca == 'Yes' %}
@@ -55,6 +56,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'registry-credentials',
                     usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     script {
+                        sh "{% if project == 'Maven' %}chmod 777 ./mvnw{% endif %}{% if project == 'Gradle' %}chmod 777 ./gradlew{% endif %}"
                         sh "{% if project == 'Maven' %}./mvnw jib:build{% endif %}{% if project == 'Gradle' %}./gradlew jib{% endif %} -Djib.to.auth.username=$USERNAME -Djib.to.auth.password=$PASSWORD -Djib.to.tags=${GIT_SHA_SHORT}"
                     }
                 }
@@ -70,7 +72,7 @@ pipeline {
             }
             steps {
                 dir("${env.WORKSPACE}/k8s") {
-                    sh "sed -ie 's/##TAG##/$BUILD_NUMBER/g' deployment.yaml"
+                    sh "sed -ie 's/##TAG##/${GIT_SHA_SHORT}/g' deployment.yaml"
                     sh "cat deployment.yaml"
                 }
 
@@ -105,7 +107,7 @@ def getEnvName(branchName) {
         return "dev";
     } else if (branchName.equals("main")) {
         return "qa";
-    } else if (branchName.contains("releases/release")) {
+    } else if (branchName.startsWith("releases/release")) {
         return "prod";
     } else {
         return null;
@@ -117,7 +119,7 @@ def getContext(branchName) {
         return "minikube";
     } else if (branchName.equals("main")) {
         return "minikube";
-    } else if (branchName.contains("releases/release")) {
+    } else if (branchName.startsWith("releases/release")) {
         return "minikube";
     } else {
         return null;

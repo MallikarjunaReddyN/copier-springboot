@@ -57,7 +57,7 @@ version:
 project_description:
     type: str
     help: Enter Your project description
-    default: "This is a Spring Boot {% from 'macros.jinja' import get_entity_name %}{{ get_entity_name(project_name) }} Microservice"
+    default: "This is a Spring Boot {% from 'macros.jinja' import get_entity_name %}{{ get_entity_name(project_name) }} Application"
     validator: "{% if not project_description %}Please enter project description for your project{% endif %}"
 
 is_db_required:
